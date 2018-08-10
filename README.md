@@ -29,10 +29,10 @@
 ```
 npm run dev
 ```
-Enjoy @ http://localhost:3000/
+Enjoy @ http://localhost:4200/
 
 ## Run Production Build
 ```
 npm run prod
 ```
-Enjoy @ http://localhost:4200/
+Enjoy @ http://localhost:3000/

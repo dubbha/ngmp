@@ -3,6 +3,7 @@
     <input
       matInput
       placeholder="Find course by name, fragment, or date"
+      (keyup)="onQueryChange($event)"
       [(ngModel)]="query"
       name="query"
     />

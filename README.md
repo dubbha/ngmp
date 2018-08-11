@@ -1,6 +1,6 @@
 # Angular Mentoring
 
-## Task 9. HTTP
+## Task 9. RxJS
 - 
 
 Coverage

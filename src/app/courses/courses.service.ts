@@ -39,6 +39,7 @@ export class CoursesService {
         ),
       config.start
         .pipe(
+          debounceTime(500),    // prevent start from resetting quicker than the query updates
           filter(s => s >= 0),  // start shouldn't be negative
           map(s => `${s}`),     // stringify to use as a GET param
           tap(s => console.log('start', s)),

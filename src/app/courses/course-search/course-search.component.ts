@@ -14,20 +14,7 @@ export class CourseSearchComponent {
 
   query = '';
 
-  // onSearch() {
-  //   this.search.emit(this.query);
-  // }
-
-  // onSearchClick() {
-  //   this.onSearch();
-  // }
-
-  // onSubmit(e: Event) {
-  //   e.preventDefault();
-  //   this.onSearch();
-  // }
-
-  onQueryChange(e: Event) {
+  onQueryChange() {
     this.queryChange.emit(this.query);
   }
 }

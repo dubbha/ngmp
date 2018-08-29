@@ -1,15 +1,10 @@
 # Angular Mentoring
 
 ## Task 9. RxJS
-- 
-
-Coverage
-```
-```
-Run Coverage
-```
-npm run test:coverage
-```
+ - Search input observed, API called on at least 3 chars typed, debounced by 250ms
+ - User info is a observable, subscribed to in header
+ - canActivate auth guard returning an observable, in addition to canLoad returning a boolean
+ - Shared LoaderComponent and LoaderService displaying an overlay and a spinner while loading
 
 ## Branches
  - Task1. Webpack/Typescript/Angular Intro

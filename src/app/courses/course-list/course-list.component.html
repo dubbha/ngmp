@@ -8,7 +8,7 @@
   appHighlight
   ></app-course-list-item>
 
-<app-courses-list-no-data *ngIf="!courses.length"></app-courses-list-no-data>
+<app-courses-list-no-data *ngIf="!courses.length && !loaderService.loading"></app-courses-list-no-data>
 
 <button
   *ngIf="courses.length"

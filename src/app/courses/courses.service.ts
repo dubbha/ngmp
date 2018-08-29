@@ -5,6 +5,7 @@ import { Observable, combineLatest } from 'rxjs';
 import { map, tap, filter, distinctUntilChanged, switchMap, debounceTime } from 'rxjs/operators';
 
 import { ConfigService } from '../core/services';
+import { LoaderService } from '../shared/services';
 import { Course } from './course-list/course-list-item/course.model';
 
 const dayms = 86400000;                       // milliseconds in a day
@@ -16,6 +17,7 @@ export class CoursesService {
 
   constructor(
     @Inject(ConfigService) private config,
+    private loadingService: LoaderService,
     private http: HttpClient,
   ) {}
 
@@ -44,12 +46,15 @@ export class CoursesService {
           map(s => `${s}`),     // stringify to use as a GET param
           tap(s => console.log('start', s)),
         ),
-    ).pipe(switchMap(([query, start]) => {
+    )
+    .pipe(switchMap(([query, start]) => {
       console.log('query:', query, 'start:', start);
       const params: { start: string, count: string, query?: string } = { start, count: `${config.count}` };
       if (query !== '') {
         params.query = query;
       }
+
+      this.loadingService.start();  // starting server call after debounce
       return this.http.get(`${this.config.apiBaseUrl}/${this.config.apiEndpoints.courses}`, { params });
     }));
   }

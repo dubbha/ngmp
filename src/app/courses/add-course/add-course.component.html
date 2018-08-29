@@ -35,7 +35,7 @@
     mat-raised-button
     color="primary"
     (click)="onSaveClick()"
-    [disabled]="isSubmitting"
+    [disabled]="loaderService.loading"
   >
     Save
   </button>

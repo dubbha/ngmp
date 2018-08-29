@@ -9,6 +9,8 @@ import { OrderByPipe } from './order-by.pipe';
 import { DialogService } from '../../material/dialog/dialog.service';
 import { appRoutingPaths } from '../../app.routing.paths';
 import { ConfigService } from '../../core/services';
+import { LoaderService } from '../../shared/services';
+
 
 @Component({
   selector: 'app-course-list',
@@ -30,9 +32,12 @@ export class CourseListComponent implements OnChanges, OnInit {
     private dialogService: DialogService,
     private orderByPipe: OrderByPipe,
     private router: Router,
+    public loaderService: LoaderService,
   ) {}
 
   ngOnInit() {
+    this.loaderService.start();  // prevent the initial no-data flickering
+
     const args: {
       query: Observable<string>,
       start: Observable<number>,
@@ -43,17 +48,17 @@ export class CourseListComponent implements OnChanges, OnInit {
       count: this.config.coursesPageLength,
     };
 
-    console.log('args', args);
+    this.coursesService.getCourses(args)
+      .subscribe(courses => {
+        this.done = courses.length < this.config.coursesPageLength;
 
-    this.coursesService.getCourses(args).subscribe(courses => {
-      this.done = courses.length < this.config.coursesPageLength;
+        this.courses = this.orderByPipe.transform(
+          this.append ? [...this.courses, ...courses] : courses,
+        );
 
-      this.courses = this.orderByPipe.transform(
-        this.append ? [...this.courses, ...courses] : courses,
-      );
-
-      this.append = false;
-    });
+        this.append = false;
+        this.loaderService.stop();
+      });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -67,22 +72,6 @@ export class CourseListComponent implements OnChanges, OnInit {
     }
   }
 
-  loadCourses() {
-    this.done = false;
-    const args: any = { start: 0, count: this.config.coursesPageLength };
-    if (this.query) { // do not set empty line param
-      args.query = this.query;
-    }
-
-    this.coursesService.getCourses(args).subscribe(courses => {
-      if (courses.length < this.config.coursesPageLength) {
-        this.done = true;
-      }
-
-      this.courses = this.orderByPipe.transform(courses);
-    });
-  }
-
   onEdit(id: number) {
     this.router.navigateByUrl(`${appRoutingPaths.courses}/${id}`);
   }
@@ -92,13 +81,18 @@ export class CourseListComponent implements OnChanges, OnInit {
       .confirm('Do you really want to delete this course?')
       .subscribe(confirmed => {
         if (confirmed) {
-          this.coursesService.deleteCourse(id).subscribe(() => this.loadCourses());
+          this.coursesService.deleteCourse(id)
+            .subscribe(() => {
+              this.loaderService.start();  // cover the debounce time
+              this.start$.next(0);
+            });
         }
       });
   }
 
   onLoadClick() {
     this.append = true;
+    this.loaderService.start();   // cover the debounce time
     this.start$.next(this.courses.length);
   }
 }

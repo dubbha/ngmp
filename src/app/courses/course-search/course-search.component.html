@@ -1,19 +1,12 @@
-<form (ngSubmit)="onSubmit($event)">
+<form>
+  <mat-icon color="primary">search</mat-icon>
   <mat-form-field>
     <input
       matInput
       placeholder="Find course by name, fragment, or date"
+      (keyup)="onQueryChange()"
       [(ngModel)]="query"
       name="query"
     />
   </mat-form-field>
-  <button
-    type="button"
-    mat-raised-button
-    color="primary"
-    (click)="onSearchClick()"
-  >
-    <mat-icon>search</mat-icon>
-    Search
-  </button>
 </form>

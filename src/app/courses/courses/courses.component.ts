@@ -16,7 +16,7 @@ export class CoursesComponent {
 
   constructor(private router: Router) {}
 
-  onSearch(query: string) {
+  onQueryChange(query: string) {
     this.query = query;
   }
 

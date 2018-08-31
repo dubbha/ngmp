@@ -30,8 +30,6 @@ export class CourseDateComponent implements OnInit {
   date: FormControl;
   startDate: moment.Moment;
 
-  constructor() { }
-
   ngOnInit() {
     this.startDate = moment(this.creationDate);
     this.date = new FormControl(moment(this.creationDate));

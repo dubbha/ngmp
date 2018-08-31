@@ -7,7 +7,7 @@ import { AuthGuard } from './shared/guards';
 import { appRoutingPaths as paths } from './app.routing.paths';
 
 const routes: Routes = [
-  { path: paths.courses, canLoad: [AuthGuard], loadChildren: './courses/courses.module#CoursesModule' },
+  { path: paths.courses, canLoad: [AuthGuard], canActivate: [AuthGuard], loadChildren: './courses/courses.module#CoursesModule' },
   { path: paths.login, component: LoginComponent },
   { path: paths.notFound, component: NotFoundComponent },
   { path: '', redirectTo: paths.courses, pathMatch: 'full' },
@@ -23,7 +23,7 @@ export const appRoutingComponents = [
   imports: [
     RouterModule.forRoot(
       routes,
-      { enableTracing: false }  // enable for debugging
+      { enableTracing: true }  // enable for debugging
     ),
   ],
   exports: [

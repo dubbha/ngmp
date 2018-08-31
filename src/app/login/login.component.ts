@@ -1,9 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../shared/services';
+import { AuthService, LoaderService } from '../shared/services';
 import { appRoutingPaths } from '../app.routing.paths';
 
 import { Subscription } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -18,6 +19,7 @@ export class LoginComponent implements OnDestroy {
 
   constructor(
     private authService: AuthService,
+    private loaderService: LoaderService,
     private router: Router,
   ) {}
 
@@ -27,10 +29,13 @@ export class LoginComponent implements OnDestroy {
 
   onSubmit(e: Event) {
     e.preventDefault();
-    this.sub = this.authService.login(this.email, this.password).subscribe(res => {
-      if (res.auth) {
-        this.router.navigateByUrl(appRoutingPaths.courses);
-      }
-    });
+    this.loaderService.start();
+    this.sub = this.authService.login(this.email, this.password)
+      .pipe(finalize(() => this.loaderService.stop()))  // stop the loader on both success or failure
+      .subscribe(res => {
+        if (res.auth) {
+          this.router.navigateByUrl(appRoutingPaths.courses);
+        }
+      });
   }
 }

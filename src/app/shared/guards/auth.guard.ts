@@ -3,6 +3,7 @@ import { CanLoad, Router } from '@angular/router';
 
 import { AuthService } from '../services';
 import { appRoutingPaths } from '../../app.routing.paths';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class AuthGuard implements CanLoad {
@@ -22,5 +23,9 @@ export class AuthGuard implements CanLoad {
       this.router.navigateByUrl(appRoutingPaths.login);
     }
     return this.isAuthenticated;
+  }
+
+  canActivate(): Observable<boolean> {
+    return this.authService.isAuthenticated;
   }
 }

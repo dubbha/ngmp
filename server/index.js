@@ -67,8 +67,7 @@ server.get('/api/user', (req, res) => {
   return res.status(401).json({ auth: false, result: 'Unauthorized' });
 });
 
-server.get('/api/courses/:id?', (req, res) => {
-  const id = req.params.id;
+server.get('/api/courses', (req, res) => {  // get courses list
   const query = req.query.query;
 
   const start = req.query.start;
@@ -79,15 +78,20 @@ server.get('/api/courses/:id?', (req, res) => {
 
   const courses =  router.db.getState().courses;
 
-  if (id) {
-    return res.json(courses.find(c => c.id === +id));
-  }
-
   let result = courses;
   if (query) {
     result = result.filter(c => `${c.title} ${c.description}`.toUpperCase().includes(query.toUpperCase()));
   }
-  res.json(result.slice(begin, end));
+  res.json(result
+    .sort((a, b) => b.creationDate - a.creationDate)  // sync server side order with the default client side order pipe
+    .slice(begin, end)
+  );
+});
+
+server.get('/api/courses/:id', (req, res) => {  // get specific course by id
+  const id = req.params.id;
+  const courses =  router.db.getState().courses;
+  res.json(courses.find(c => c.id === +id));
 });
 
 server.get('/api/users', (req, res) => res.status(403).json({ result: 'Forbidden' }));     // users and sessions are only used internally

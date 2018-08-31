@@ -10,20 +10,11 @@ import {
   styleUrls: ['./course-search.component.sass']
 })
 export class CourseSearchComponent {
-  @Output() search = new EventEmitter<string>();
+  @Output() queryChange = new EventEmitter<string>();
 
   query = '';
 
-  onSearch() {
-    this.search.emit(this.query);
-  }
-
-  onSearchClick() {
-    this.onSearch();
-  }
-
-  onSubmit(e: Event) {
-    e.preventDefault();
-    this.onSearch();
+  onQueryChange() {
+    this.queryChange.emit(this.query);
   }
 }

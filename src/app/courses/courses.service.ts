@@ -1,14 +1,19 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { Observable, combineLatest } from 'rxjs';
-import { map, tap, filter, distinctUntilChanged, switchMap, debounceTime } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 import { ConfigService } from '../core/services';
 import { LoaderService } from '../shared/services';
 import { Course } from './course-list/course-list-item/course.model';
 
 const dayms = 86400000;                       // milliseconds in a day
+
+export interface IQueryAndStart {
+  query: string;
+  start: number;
+}
 
 @Injectable()
 export class CoursesService {
@@ -21,42 +26,18 @@ export class CoursesService {
     private http: HttpClient,
   ) {}
 
-  isValidQuery(query: string) {
-    // Query should either be empty (full search) or consist of at least 3 chars
-    return query === '' || (query.length >= 3 && !(/^[\s]+$/g).test(query));
-  }
+  getCourses(queryAndStart: Observable<IQueryAndStart>): Observable<any> {
+    return queryAndStart.pipe(
+      switchMap(({ query, start }) => {
+        const params: { start: string, count: string, query?: string } = { start: `${start}`, count: `${this.config.coursesPageLength}` };
+        if (query !== '') {
+          params.query = query;
+        }
 
-  getCourses(config: {
-    query: Observable<string>,
-    start: Observable<number>,
-    count?: number,
-  }): Observable<any> {
-    return combineLatest(
-      config.query
-        .pipe(
-          debounceTime(250),
-          distinctUntilChanged(),
-          filter(q => this.isValidQuery(q)),
-          tap(q => console.log('query', q)),
-        ),
-      config.start
-        .pipe(
-          debounceTime(250),    // prevent start from resetting quicker than the query updates
-          filter(s => s >= 0),  // start shouldn't be negative
-          map(s => `${s}`),     // stringify to use as a GET param
-          tap(s => console.log('start', s)),
-        ),
-    )
-    .pipe(switchMap(([query, start]) => {
-      console.log('query:', query, 'start:', start);
-      const params: { start: string, count: string, query?: string } = { start, count: `${config.count}` };
-      if (query !== '') {
-        params.query = query;
-      }
-
-      this.loadingService.start();  // starting server call after debounce
-      return this.http.get(`${this.config.apiBaseUrl}/${this.config.apiEndpoints.courses}`, { params });
-    }));
+        this.loadingService.start();
+        return this.http.get(`${this.config.apiBaseUrl}/${this.config.apiEndpoints.courses}`, { params });
+      })
+    );
   }
 
   getCourse(id: number): Observable<any> {

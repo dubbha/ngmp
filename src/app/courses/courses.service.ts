@@ -34,7 +34,6 @@ export class CoursesService {
           params.query = query;
         }
 
-        this.loadingService.start();
         return this.http.get(`${this.config.apiBaseUrl}/${this.config.apiEndpoints.courses}`, { params });
       })
     );

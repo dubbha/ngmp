@@ -42,8 +42,6 @@ export class CourseListComponent implements OnChanges, OnInit {
   ) {}
 
   ngOnInit() {
-    this.loaderService.start();  // prevent the initial no-data flickering
-
     this.query$.pipe(
       // query should either be empty (full search) or consist of at least 3 non-space chars
       filter(query => query === '' || (query.length >= 3 && !(/^[\s]+$/g).test(query))),
@@ -69,7 +67,6 @@ export class CourseListComponent implements OnChanges, OnInit {
         );
 
         this.append = false;
-        this.loaderService.stop();
       });
   }
 

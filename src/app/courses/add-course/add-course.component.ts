@@ -33,9 +33,7 @@ export class AddCourseComponent {
   }
 
   onSaveClick() {
-    this.loaderService.start();
     this.coursesService.createCourse(this.course)
-      .pipe(finalize(() => this.loaderService.stop()))  // stop the loader on both success or failure
       .subscribe(() => {
         this.router.navigateByUrl(appRoutingPaths.courses);
       });

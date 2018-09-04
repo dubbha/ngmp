@@ -35,7 +35,7 @@ export class AuthEffects {
                 return new AuthActions.LoginSuccess();
               }
             }),
-            catchError(() => of(new AuthActions.LoginError())),
+            catchError(err => of(new AuthActions.LoginError(err))),
           ),
       ),
     );
@@ -62,7 +62,7 @@ export class AuthEffects {
                 return new AuthActions.LogoutSuccess();
               }
             }),
-            catchError(() => of(new AuthActions.LoginError())),
+            catchError(err => of(new AuthActions.LogoutError(err))),
           ),
       ),
     );

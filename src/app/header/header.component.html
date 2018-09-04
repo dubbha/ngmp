@@ -1,6 +1,6 @@
 <mat-toolbar color="primary">
   <app-logo></app-logo>
-  <div *ngIf="isAuthenticated" class="user">
+  <div *ngIf="isAuthenticated && user" class="user">
     <mat-icon>account_circle</mat-icon>
     <span *ngIf="user" class="user__name">{{user.firstName}} {{user.lastName}}</span>
     <button

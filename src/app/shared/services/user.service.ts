@@ -7,7 +7,8 @@ import { getConfig, ConfigState } from '../../core/store';
 import { Observable } from 'rxjs';
 
 @Injectable()
-export class AuthService {
+export class UserService {
+
   private config: ConfigState;
 
   constructor(
@@ -17,11 +18,7 @@ export class AuthService {
     this.store.select(getConfig).subscribe(config => this.config = config);
   }
 
-  login(email: string, password: string): Observable<any> {
-    return this.http.post(`${this.config.apiBaseUrl}/${this.config.apiEndpoints.login}`, { email, password });
-  }
-
-  logout(): Observable<any> {
-    return this.http.get(`${this.config.apiBaseUrl}/${this.config.apiEndpoints.logout}`);
+  getUserInfo(): Observable<any> {
+    return this.http.get(`${this.config.apiBaseUrl}/${this.config.apiEndpoints.user}`);
   }
 }

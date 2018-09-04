@@ -21,6 +21,7 @@ export class LoginSuccess implements Action {
 
 export class LoginError implements Action {
   readonly type = AuthActionTypes.LOGIN_ERROR;
+  constructor(public payload: Error | string) {}
 }
 
 export class Logout implements Action {
@@ -33,6 +34,7 @@ export class LogoutSuccess implements Action {
 
 export class LogoutError implements Action {
   readonly type = AuthActionTypes.LOGOUT_ERROR;
+  constructor(public payload: Error | string) {}
 }
 
 export type AuthActions

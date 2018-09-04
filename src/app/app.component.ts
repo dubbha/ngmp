@@ -5,6 +5,9 @@ import { Router, NavigationEnd, RouterEvent } from '@angular/router';
 import { registerLocaleData } from '@angular/common';
 import localeUk from '@angular/common/locales/uk';
 
+import { Store } from '@ngrx/store';
+import { AuthState, getIsAuthenticated } from './shared/store';
+
 import { Subscription } from 'rxjs';
 
 import { appRoutingPaths } from './app.routing.paths';
@@ -23,13 +26,14 @@ export class AppComponent implements OnInit, OnDestroy {
   private sub: Subscription;
 
   constructor(
+    private store: Store<AuthState>,
     public authService: AuthService,
     public router: Router,
   ) {}
 
   ngOnInit() {
     this.sub = new Subscription();
-    this.sub.add(this.authService.isAuthenticated.subscribe(next => this.isAuthenticated = next));
+    this.sub.add(this.store.select(getIsAuthenticated).subscribe(next => this.isAuthenticated = next));
     this.sub.add(this.router.events.subscribe((event: RouterEvent) => this.setRouteSpecificClasses(event)));
   }
 

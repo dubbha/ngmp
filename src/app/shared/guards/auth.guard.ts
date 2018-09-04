@@ -4,7 +4,6 @@ import { CanLoad, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AuthState, getIsAuthenticated } from '../store';
 
-import { AuthService } from '../services';
 import { appRoutingPaths } from '../../app.routing.paths';
 import { Observable } from 'rxjs';
 
@@ -13,7 +12,6 @@ export class AuthGuard implements CanLoad {
   isAuthenticated: boolean;
 
   constructor(
-    private authService: AuthService,
     private router: Router,
     private store: Store<AuthState>,
   ) {

@@ -1,8 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd, RouterEvent } from '@angular/router';
+
+import { Store } from '@ngrx/store';
+import { getIsAuthenticated, getUserInfo, AuthState } from '../shared/store';
+import * as AuthActions from '../shared/store/actions';
+import * as UserActions from '../shared/store/actions';
+
 import { AuthService } from '../shared/services';
 import { UserPublicInfo } from '../shared/models';
-import { appRoutingPaths  } from '../app.routing.paths';
 
 import { Subscription } from 'rxjs';
 
@@ -18,14 +23,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private sub: Subscription;
 
   constructor(
+    private store: Store<AuthState>,
     public authService: AuthService,
     public router: Router,
   ) {}
 
   ngOnInit() {
     this.sub = new Subscription();
-    this.sub.add(this.authService.isAuthenticated.subscribe(next => this.isAuthenticated = next));
-    this.sub.add(this.authService.userInfo.subscribe(next => this.user = next));
+    this.sub.add(this.store.select(getIsAuthenticated).subscribe(next => this.isAuthenticated = next));
+    this.sub.add(this.store.select(getUserInfo).subscribe(next => this.user = next));
+
+    this.sub.add(this.router.events.subscribe((event: RouterEvent) => this.getUserInfo(event)));
   }
 
   ngOnDestroy() {
@@ -33,11 +41,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   logout() {
-    this.sub.add(this.authService.logout().subscribe(res => {
-      if (res.success) {
-        this.router.navigateByUrl(appRoutingPaths.login);
-      }
-    }));
+    this.store.dispatch(new AuthActions.Logout());
+  }
+
+  getUserInfo(routerEvent: RouterEvent) {
+    if (this.isAuthenticated && !this.user && routerEvent instanceof NavigationEnd) {
+      this.store.dispatch(new UserActions.GetUserInfo());
+    }
   }
 
 }

@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { authReducer, AuthEffects } from './store';
+import { authReducer, userReducer, AuthEffects, UserEffects } from './store';
 
 import { AuthGuard } from './guards';
-import { AuthService, LoaderService } from './services';
+import { AuthService, UserService, LoaderService } from './services';
 import { LoaderComponent } from './components';
 
 
@@ -14,7 +14,8 @@ import { LoaderComponent } from './components';
   imports: [
     CommonModule,
     StoreModule.forFeature('auth', authReducer),
-    EffectsModule.forFeature([AuthEffects]),
+    StoreModule.forFeature('user', userReducer),
+    EffectsModule.forFeature([AuthEffects, UserEffects]),
   ],
   declarations: [
     LoaderComponent
@@ -22,6 +23,7 @@ import { LoaderComponent } from './components';
   providers: [
     AuthGuard,
     AuthService,
+    UserService,
     LoaderService,
   ],
   exports: [

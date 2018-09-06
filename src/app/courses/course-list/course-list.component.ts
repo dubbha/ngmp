@@ -2,7 +2,7 @@ import { Component, Input, OnInit, OnChanges, SimpleChanges, Inject } from '@ang
 import { Router } from '@angular/router';
 
 import { BehaviorSubject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, withLatestFrom } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, withLatestFrom, tap } from 'rxjs/operators';
 
 import { Course } from './course-list-item/course.model';
 import { CoursesService, IQueryAndStart } from '../courses.service';
@@ -57,6 +57,12 @@ export class CourseListComponent implements OnChanges, OnInit {
       distinctUntilChanged(),
       withLatestFrom(this.query$),
     ).subscribe(([start, query]) => this.queryAndStart$.next({ start, query }));
+
+    // Maybe store both in store and watch them elsewhere?
+    // Maybe connect the search input separately?
+    this.queryAndStart$.pipe(
+      distinctUntilChanged((a, b) => a.query === b.query && a.start === b.start)
+    ).subscribe((queryAndStart: IQueryAndStart) => console.log(queryAndStart));
 
     this.coursesService.getCourses(this.queryAndStart$)
       .subscribe(courses => {

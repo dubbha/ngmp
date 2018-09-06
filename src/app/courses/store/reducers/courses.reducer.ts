@@ -15,7 +15,6 @@ export function authReducer(
     case CoursesActionTypes.GET_COURSES_SUCCESS:
       return {
         ...state,
-        isAuthenticated: true,
         isLoading: false,
       };
 

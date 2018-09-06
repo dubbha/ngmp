@@ -3,76 +3,46 @@ import { Router } from '@angular/router';
 
 import { Action } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
-import { AuthActionTypes } from '../actions';
-import * as AuthActions from '../actions/auth.actions';
+import { CoursesActionTypes } from '../actions';
+import * as CoursesActions from '../actions/courses.actions';
 
 import { Observable, of } from 'rxjs';
 import { switchMap, map, tap, catchError } from 'rxjs/operators';
 
-import { AuthService } from '../../services';
-import { LocalStorageService } from '../../../core/services';
+import { CoursesService } from '../../courses.service';
 import { appRoutingPaths  } from '../../../app.routing.paths';
 
 @Injectable()
-export class AuthEffects {
+export class CoursesEffects {
   constructor(
     private actions$: Actions,
-    private authService: AuthService,
-    private localStorageService: LocalStorageService,
+    private coursesService: CoursesService,
     private router: Router,
   ) {}
 
   @Effect()
   login$: Observable<Action> = this.actions$
-    .ofType<AuthActions.Login>(AuthActionTypes.LOGIN)
+    .ofType<CoursesActions.GetCourses>(CoursesActionTypes.GET_COURSES)
     .pipe(
-      switchMap(({ payload }) =>
-        this.authService.login(payload.email, payload.password)
+      switchMap(() =>
+        this.coursesService.getCourses()
           .pipe(
             map((res: any) => {
               if (res.auth && res.token) {
-                this.localStorageService.setItem('token', res.token);
-                return new AuthActions.LoginSuccess();
+                return new CoursesActions.GetCoursesSuccess();
               }
             }),
-            catchError(err => of(new AuthActions.LoginError(err))),
+            catchError(err => of(new CoursesActions.GetCoursesError(err))),
           ),
       ),
     );
 
   @Effect({ dispatch: false })
   loginSuccess$: Observable<Action> = this.actions$
-    .ofType<AuthActions.Login>(AuthActionTypes.LOGIN_SUCCESS)
+    .ofType<CoursesActions.GetCoursesSuccess>(CoursesActionTypes.GET_COURSES_SUCCESS)
     .pipe(
       tap(() => {
         this.router.navigateByUrl(appRoutingPaths.courses);
-      })
-    );
-
-  @Effect()
-  logout$: Observable<Action> = this.actions$
-    .ofType<AuthActions.Login>(AuthActionTypes.LOGOUT)
-    .pipe(
-      switchMap(() =>
-        this.authService.logout()
-          .pipe(
-            map((res: any) => {
-              if (res.success) {
-                this.localStorageService.removeItem('token');
-                return new AuthActions.LogoutSuccess();
-              }
-            }),
-            catchError(err => of(new AuthActions.LogoutError(err))),
-          ),
-      ),
-    );
-
-  @Effect({ dispatch: false })
-  logoutSuccess$: Observable<Action> = this.actions$
-    .ofType<AuthActions.Login>(AuthActionTypes.LOGOUT_SUCCESS)
-    .pipe(
-      tap(() => {
-        this.router.navigateByUrl(appRoutingPaths.login);
       })
     );
 }

@@ -42,7 +42,7 @@ export class AuthEffects {
 
   @Effect({ dispatch: false })
   loginSuccess$: Observable<Action> = this.actions$
-    .ofType<AuthActions.Login>(AuthActionTypes.LOGIN_SUCCESS)
+    .ofType<AuthActions.LoginSuccess>(AuthActionTypes.LOGIN_SUCCESS)
     .pipe(
       tap(() => {
         this.router.navigateByUrl(appRoutingPaths.courses);
@@ -51,7 +51,7 @@ export class AuthEffects {
 
   @Effect()
   logout$: Observable<Action> = this.actions$
-    .ofType<AuthActions.Login>(AuthActionTypes.LOGOUT)
+    .ofType<AuthActions.Logout>(AuthActionTypes.LOGOUT)
     .pipe(
       switchMap(() =>
         this.authService.logout()
@@ -69,7 +69,7 @@ export class AuthEffects {
 
   @Effect({ dispatch: false })
   logoutSuccess$: Observable<Action> = this.actions$
-    .ofType<AuthActions.Login>(AuthActionTypes.LOGOUT_SUCCESS)
+    .ofType<AuthActions.LogoutSuccess>(AuthActionTypes.LOGOUT_SUCCESS)
     .pipe(
       tap(() => {
         this.router.navigateByUrl(appRoutingPaths.login);

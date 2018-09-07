@@ -21,28 +21,32 @@ export class CoursesEffects {
   ) {}
 
   @Effect()
-  login$: Observable<Action> = this.actions$
+  getCourses$: Observable<Action> = this.actions$
     .ofType<CoursesActions.GetCourses>(CoursesActionTypes.GET_COURSES)
     .pipe(
       switchMap(() =>
         this.coursesService.getCourses()
           .pipe(
             map((res: any) => {
-              if (res.auth && res.token) {
-                return new CoursesActions.GetCoursesSuccess();
-              }
+              return new CoursesActions.GetCoursesSuccess(res);
             }),
             catchError(err => of(new CoursesActions.GetCoursesError(err))),
           ),
       ),
     );
 
-  @Effect({ dispatch: false })
-  loginSuccess$: Observable<Action> = this.actions$
-    .ofType<CoursesActions.GetCoursesSuccess>(CoursesActionTypes.GET_COURSES_SUCCESS)
+  @Effect()
+  getCourse$: Observable<Action> = this.actions$
+    .ofType<CoursesActions.GetCourse>(CoursesActionTypes.GET_COURSE)
     .pipe(
-      tap(() => {
-        this.router.navigateByUrl(appRoutingPaths.courses);
-      })
+      switchMap(({ payload: id }) =>
+        this.coursesService.getCourse(id)
+          .pipe(
+            map((res: any) => {
+              return new CoursesActions.GetCourseSuccess(res);
+            }),
+            catchError(err => of(new CoursesActions.GetCourseError(err))),
+          ),
+      ),
     );
 }

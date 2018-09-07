@@ -1,6 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
+import { Store } from '@ngrx/store';
+import { getCourse, GetCourse, ResetCourse, CoursesState } from '../store';
+
 import { Subscription, Subscriber } from 'rxjs';
 
 import { Course } from '../course-list/course-list-item/course.model';
@@ -21,6 +24,7 @@ export class EditCourseComponent implements OnInit, OnDestroy {
   public sub: Subscription;
 
   constructor(
+    private store: Store<CoursesState>,
     private coursesService: CoursesService,
     private router: Router,
     private route: ActivatedRoute,
@@ -28,7 +32,12 @@ export class EditCourseComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sub = new Subscriber();
+
+    this.sub.add(this.store.select(getCourse).subscribe(next => this.course = next));
+
     this.sub.add(this.route.params.subscribe(params => {
+      this.store.dispatch(new GetCourse(+params.id));
+
       this.sub.add(this.coursesService.getCourse(+params.id)
         .subscribe(course => {
           this.course = course;
@@ -37,6 +46,7 @@ export class EditCourseComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.store.dispatch(new ResetCourse());
     this.sub.unsubscribe();
   }
 
@@ -49,8 +59,8 @@ export class EditCourseComponent implements OnInit, OnDestroy {
   }
 
   onSaveClick() {
+    // this.store.dispatch(new UpdateCourse(this.course));  // in effect: this.router.navigateByUrl(appRoutingPaths.courses)
     this.coursesService.updateCourse(this.course).subscribe(() => this.router.navigateByUrl(appRoutingPaths.courses));
-
   }
 
   onCancelClick() {

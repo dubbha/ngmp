@@ -1,15 +1,18 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { Store } from '@ngrx/store';
+import { getConfig, ConfigState } from '../../core/store';
+import { getCourses, GetCourses, SetQueryAndStart, CoursesState, getQueryAndStart } from '../store';
+
 import { BehaviorSubject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, withLatestFrom, tap } from 'rxjs/operators';
 
 import { Course } from './course-list-item/course.model';
-import { CoursesService, IQueryAndStart } from '../courses.service';
+import { CoursesService } from '../courses.service';
 import { OrderByPipe } from './order-by.pipe';
 import { DialogService } from '../../material/dialog/dialog.service';
 import { appRoutingPaths } from '../../app.routing.paths';
-import { ConfigService } from '../../core/services';
 import { LoaderService } from '../../shared/services';
 
 
@@ -23,17 +26,16 @@ export class CourseListComponent implements OnChanges, OnInit {
 
   query$ = new BehaviorSubject<string>('');
   start$ = new BehaviorSubject<number>(0);
-  queryAndStart$ = new BehaviorSubject<IQueryAndStart>({
-    query: this.query$.value,
-    start: this.start$.value
-  });
 
   courses: Course[] = [];
   append = false;
   done = false;
 
+  private config: ConfigState;
+
   constructor(
-    @Inject(ConfigService) private config,
+    private configStore: Store<CoursesState>,
+    private coursesStore: Store<CoursesState>,
     private coursesService: CoursesService,
     private dialogService: DialogService,
     private orderByPipe: OrderByPipe,
@@ -47,33 +49,34 @@ export class CourseListComponent implements OnChanges, OnInit {
       filter(query => query === '' || (query.length >= 3 && !(/^[\s]+$/g).test(query))),
       debounceTime(250),
       distinctUntilChanged()
-    ).subscribe(query => {
-      this.start$.next(0);
-      this.queryAndStart$.next({ query, start: 0 });
-    });
+    ).subscribe(query => this.coursesStore.dispatch(new SetQueryAndStart({
+      query,
+      start: 0,
+    })));
 
     this.start$.pipe(
       filter(s => s >= 0),  // start shouldn't be negative
-      distinctUntilChanged(),
       withLatestFrom(this.query$),
-    ).subscribe(([start, query]) => this.queryAndStart$.next({ start, query }));
+    ).subscribe(([start, query]) => this.coursesStore.dispatch(new SetQueryAndStart({
+      query,
+      start,
+    })));
 
-    // Maybe store both in store and watch them elsewhere?
-    // Maybe connect the search input separately?
-    this.queryAndStart$.pipe(
-      distinctUntilChanged((a, b) => a.query === b.query && a.start === b.start)
-    ).subscribe((queryAndStart: IQueryAndStart) => console.log(queryAndStart));
+    this.configStore.select(getConfig).subscribe(config => this.config = config);
 
-    this.coursesService.getCourses(this.queryAndStart$)
-      .subscribe(courses => {
-        this.done = courses.length < this.config.coursesPageLength;
+    this.coursesStore.select(getCourses).subscribe(courses => {
+      this.done = courses.length < this.config.coursesPageLength;
 
-        this.courses = this.orderByPipe.transform(
-          this.append ? [...this.courses, ...courses] : courses,
-        );
+      this.courses = this.orderByPipe.transform(
+        this.append ? [...this.courses, ...courses] : courses,
+      );
 
-        this.append = false;
-      });
+      this.append = false;
+    });
+
+    this.coursesStore.select(getQueryAndStart)
+      .pipe(distinctUntilChanged((a, b) => a.query === b.query && a.start === b.start))
+      .subscribe(() => this.coursesStore.dispatch(new GetCourses()));
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -100,6 +103,7 @@ export class CourseListComponent implements OnChanges, OnInit {
   }
 
   onLoadClick() {
+    console.log('this.courses.length', this.courses.length);
     this.append = true;
     this.start$.next(this.courses.length);
   }

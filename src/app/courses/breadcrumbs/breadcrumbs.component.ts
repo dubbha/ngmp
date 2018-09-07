@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { CoursesService } from '../courses.service';
+import { Store } from '@ngrx/store';
+import { getCourseTitle, CoursesState } from '../store';
+
 import { appRoutingPaths } from '../../app.routing.paths';
 import { coursesRoutingPaths } from '../courses.routing.paths';
 
@@ -16,8 +18,8 @@ export class BreadcrumbsComponent implements OnInit {
   breadCrumbs: breadCrumbsType;
 
   constructor(
-    private coursesService: CoursesService,
     private router: Router,
+    private store: Store<CoursesState>,
   ) {}
 
   ngOnInit() {
@@ -46,10 +48,8 @@ export class BreadcrumbsComponent implements OnInit {
       if (urlArr[1] === coursesRoutingPaths.new) {
         this.breadCrumbs = [...crumbs, { text: 'New' }];
       } else if (urlArr[1].match(/^[0-9]*$/)) {
-        const id = +urlArr[1];
-        this.coursesService.getCourse(id).subscribe(course => {
-          this.breadCrumbs = [...crumbs, { text: course.title }];
-        });
+        this.store.select(getCourseTitle)
+          .subscribe(title => this.breadCrumbs = [...crumbs, { text: title }]);
       } else {
         this.breadCrumbs = crumbs;
       }

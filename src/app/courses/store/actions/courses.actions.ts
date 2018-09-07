@@ -10,6 +10,15 @@ export class CoursesActionTypes {
   static readonly GET_COURSE = '[Courses] GET_COURSE';
   static readonly GET_COURSE_SUCCESS = '[Courses] GET_COURSE_SUCCESS';
   static readonly GET_COURSE_ERROR = '[Courses] GET_COURSE_ERROR';
+  static readonly CREATE_COURSE = '[Courses] CREATE_COURSE';
+  static readonly CREATE_COURSE_SUCCESS = '[Courses] CREATE_COURSE_SUCCESS';
+  static readonly CREATE_COURSE_ERROR = '[Courses] CREATE_COURSE_ERROR';
+  static readonly UPDATE_COURSE = '[Courses] UPDATE_COURSE';
+  static readonly UPDATE_COURSE_SUCCESS = '[Courses] UPDATE_COURSE_SUCCESS';
+  static readonly UPDATE_COURSE_ERROR = '[Courses] UPDATE_COURSE_ERROR';
+  static readonly DELETE_COURSE = '[Courses] DELETE_COURSE';
+  static readonly DELETE_COURSE_SUCCESS = '[Courses] DELETE_COURSE_SUCCESS';
+  static readonly DELETE_COURSE_ERROR = '[Courses] DELETE_COURSE_ERROR';
   static readonly RESET_COURSE = '[Courses] RESET_COURSE';
   static readonly SET_QUERY_AND_START = '[Courses] SET_QUERY_AND_START';
 }
@@ -43,6 +52,48 @@ export class GetCourseError implements Action {
   constructor(public payload: Error | string) {}
 }
 
+export class CreateCourse implements Action {
+  readonly type = CoursesActionTypes.CREATE_COURSE;
+  constructor(public payload: Partial<Course>) {}
+}
+
+export class CreateCourseSuccess implements Action {
+  readonly type = CoursesActionTypes.CREATE_COURSE_SUCCESS;
+}
+
+export class CreateCourseError implements Action {
+  readonly type = CoursesActionTypes.CREATE_COURSE_ERROR;
+  constructor(public payload: Error | string) {}
+}
+
+export class UpdateCourse implements Action {
+  readonly type = CoursesActionTypes.UPDATE_COURSE;
+  constructor(public payload: Partial<Course>) {}
+}
+
+export class UpdateCourseSuccess implements Action {
+  readonly type = CoursesActionTypes.UPDATE_COURSE_SUCCESS;
+}
+
+export class UpdateCourseError implements Action {
+  readonly type = CoursesActionTypes.UPDATE_COURSE_ERROR;
+  constructor(public payload: Error | string) {}
+}
+
+export class DeleteCourse implements Action {
+  readonly type = CoursesActionTypes.DELETE_COURSE;
+  constructor(public payload: number) {}
+}
+
+export class DeleteCourseSuccess implements Action {
+  readonly type = CoursesActionTypes.DELETE_COURSE_SUCCESS;
+}
+
+export class DeleteCourseError implements Action {
+  readonly type = CoursesActionTypes.DELETE_COURSE_ERROR;
+  constructor(public payload: Error | string) {}
+}
+
 export class ResetCourse implements Action {
   readonly type = CoursesActionTypes.RESET_COURSE;
 }
@@ -59,5 +110,14 @@ export type CoursesActions
   | GetCourse
   | GetCourseSuccess
   | GetCourseError
+  | CreateCourse
+  | CreateCourseSuccess
+  | CreateCourseError
+  | UpdateCourse
+  | UpdateCourseSuccess
+  | UpdateCourseError
+  | DeleteCourse
+  | DeleteCourseSuccess
+  | DeleteCourseError
   | ResetCourse
   | SetQueryAndStart;

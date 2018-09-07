@@ -16,7 +16,6 @@ export class LoaderService {
       this.store.select(getAuthIsLoading),
       this.store.select(getUserIsLoading),
     ).subscribe(([authIsLoading, userIsLoading]) => {
-      console.log('authIsLoading', authIsLoading, 'userIsLoading', userIsLoading);
       this.isLoading = authIsLoading || userIsLoading;
     });
   }

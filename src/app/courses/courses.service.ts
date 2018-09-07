@@ -2,17 +2,15 @@ import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
 
-import { ConfigService } from '../core/services';
-import { LoaderService } from '../shared/services';
 import { Course } from './course-list/course-list-item/course.model';
 
 import { Store } from '@ngrx/store';
 import { getConfig, ConfigState } from '../core/store';
-import { getQueryAndStart, QueryAndStart, CoursesState } from './store';
+import { getQueryAndStart } from './store/selectors';  // avoid circular dependencies
+import { QueryAndStart, CoursesState } from './store/state';
 
-const dayms = 86400000;                       // milliseconds in a day
+const dayms = 86400000;  // milliseconds in a day
 
 @Injectable()
 export class CoursesService {

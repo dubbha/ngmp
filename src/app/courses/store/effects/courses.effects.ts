@@ -27,9 +27,7 @@ export class CoursesEffects {
       switchMap(() =>
         this.coursesService.getCourses()
           .pipe(
-            map((res: any) => {
-              return new CoursesActions.GetCoursesSuccess(res);
-            }),
+            map((res: any) => new CoursesActions.GetCoursesSuccess(res)),
             catchError(err => of(new CoursesActions.GetCoursesError(err))),
           ),
       ),
@@ -42,10 +40,65 @@ export class CoursesEffects {
       switchMap(({ payload: id }) =>
         this.coursesService.getCourse(id)
           .pipe(
-            map((res: any) => {
-              return new CoursesActions.GetCourseSuccess(res);
-            }),
+            map((res: any) => new CoursesActions.GetCourseSuccess(res)),
             catchError(err => of(new CoursesActions.GetCourseError(err))),
+          ),
+      ),
+    );
+
+  @Effect()
+  createCourse$: Observable<Action> = this.actions$
+    .ofType<CoursesActions.CreateCourse>(CoursesActionTypes.CREATE_COURSE)
+    .pipe(
+      switchMap(({ payload }) =>
+        this.coursesService.createCourse(payload)
+          .pipe(
+            map(() => new CoursesActions.CreateCourseSuccess()),
+            catchError(err => of(new CoursesActions.CreateCourseError(err))),
+          ),
+      ),
+    );
+
+  @Effect({ dispatch: false })
+  createCourseSuccess$: Observable<Action> = this.actions$
+    .ofType<CoursesActions.CreateCourseSuccess>(CoursesActionTypes.CREATE_COURSE_SUCCESS)
+    .pipe(
+      tap(() => {
+        this.router.navigateByUrl(appRoutingPaths.courses);
+      })
+    );
+
+  @Effect()
+  updateCourse$: Observable<Action> = this.actions$
+    .ofType<CoursesActions.UpdateCourse>(CoursesActionTypes.UPDATE_COURSE)
+    .pipe(
+      switchMap(({ payload }) =>
+        this.coursesService.updateCourse(payload)
+          .pipe(
+            map(() => new CoursesActions.UpdateCourseSuccess()),
+            catchError(err => of(new CoursesActions.UpdateCourseError(err))),
+          ),
+      ),
+    );
+
+  @Effect({ dispatch: false })
+  updateCourseSuccess$: Observable<Action> = this.actions$
+    .ofType<CoursesActions.UpdateCourseSuccess>(CoursesActionTypes.UPDATE_COURSE_SUCCESS)
+    .pipe(
+      tap(() => {
+        this.router.navigateByUrl(appRoutingPaths.courses);
+      })
+    );
+
+  @Effect()
+  deleteCourse$: Observable<Action> = this.actions$
+    .ofType<CoursesActions.DeleteCourse>(CoursesActionTypes.DELETE_COURSE)
+    .pipe(
+      switchMap(({ payload }) =>
+        this.coursesService.deleteCourse(payload)
+          .pipe(
+            map(() => new CoursesActions.DeleteCourseSuccess()),
+            catchError(err => of(new CoursesActions.DeleteCourseError(err))),
           ),
       ),
     );

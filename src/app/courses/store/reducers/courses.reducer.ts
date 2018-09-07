@@ -32,7 +32,6 @@ export function coursesReducer(
       };
 
     case CoursesActionTypes.GET_COURSE_SUCCESS:
-      console.log(action);
       return {
         ...state,
         course: action.payload,
@@ -45,8 +44,62 @@ export function coursesReducer(
         isLoading: false,
       };
 
+    case CoursesActionTypes.CREATE_COURSE:
+      return {
+        ...state,
+        isLoading: true,
+      };
+
+    case CoursesActionTypes.CREATE_COURSE_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+      };
+
+    case CoursesActionTypes.CREATE_COURSE_ERROR:
+      return {
+        ...state,
+        isLoading: false,
+      };
+
+    case CoursesActionTypes.UPDATE_COURSE:
+      return {
+        ...state,
+        isLoading: true,
+      };
+
+    case CoursesActionTypes.UPDATE_COURSE_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+      };
+
+    case CoursesActionTypes.UPDATE_COURSE_ERROR:
+      return {
+        ...state,
+        isLoading: false,
+      };
+
+    case CoursesActionTypes.DELETE_COURSE:
+      return {
+        ...state,
+        isLoading: true,
+      };
+
+    case CoursesActionTypes.DELETE_COURSE_SUCCESS:
+      return {
+        ...state,
+        queryAndStart: { ...state.queryAndStart, start: 0 },
+        isLoading: false,
+      };
+
+    case CoursesActionTypes.DELETE_COURSE_ERROR:
+      return {
+        ...state,
+        isLoading: false,
+      };
+
     case CoursesActionTypes.RESET_COURSE:
-      console.log(action);
       return {
         ...state,
         course: null,

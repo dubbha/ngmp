@@ -3,7 +3,9 @@ import { Router } from '@angular/router';
 
 import { Store } from '@ngrx/store';
 import { getConfig, ConfigState } from '../../core/store';
-import { getCourses, GetCourses, SetQueryAndStart, CoursesState, getQueryAndStart } from '../store';
+import { CoursesState } from '../store/state';
+import { getCourses, getQueryAndStart } from '../store/selectors';
+import { GetCourses, SetQueryAndStart, DeleteCourse } from '../store/actions';
 
 import { BehaviorSubject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, withLatestFrom, tap } from 'rxjs/operators';
@@ -34,13 +36,13 @@ export class CourseListComponent implements OnChanges, OnInit {
   private config: ConfigState;
 
   constructor(
+    public coursesService: CoursesService,
+    public loaderService: LoaderService,
     private configStore: Store<CoursesState>,
     private coursesStore: Store<CoursesState>,
-    private coursesService: CoursesService,
     private dialogService: DialogService,
     private orderByPipe: OrderByPipe,
     private router: Router,
-    public loaderService: LoaderService,
   ) {}
 
   ngOnInit() {
@@ -75,7 +77,6 @@ export class CourseListComponent implements OnChanges, OnInit {
     });
 
     this.coursesStore.select(getQueryAndStart)
-      .pipe(distinctUntilChanged((a, b) => a.query === b.query && a.start === b.start))
       .subscribe(() => this.coursesStore.dispatch(new GetCourses()));
   }
 
@@ -96,14 +97,12 @@ export class CourseListComponent implements OnChanges, OnInit {
       .confirm('Do you really want to delete this course?')
       .subscribe(confirmed => {
         if (confirmed) {
-          this.coursesService.deleteCourse(id)
-            .subscribe(() => this.start$.next(0));
+          this.coursesStore.dispatch(new DeleteCourse(id));
         }
       });
   }
 
   onLoadClick() {
-    console.log('this.courses.length', this.courses.length);
     this.append = true;
     this.start$.next(this.courses.length);
   }

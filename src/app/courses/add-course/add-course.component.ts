@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { FormGroup, FormControl } from '@angular/forms';
 
 import { Store } from '@ngrx/store';
 import { CoursesState, CreateCourse } from '../store';
 
-import { NewCourse } from '../course-list/course-list-item/course.model';
 import { LoaderService } from '../../shared/services';
 import { appRoutingPaths } from '../../app.routing.paths';
 
@@ -14,26 +14,25 @@ import { appRoutingPaths } from '../../app.routing.paths';
   styleUrls: ['./add-course.component.sass']
 })
 export class AddCourseComponent {
-  course: NewCourse;
+  course = new FormGroup({
+    title: new FormControl(''),
+    description: new FormControl(''),
+  });
+  creationDate = new FormControl(Date.now());
+  durationMin = new FormControl(0);
 
   constructor(
     public loaderService: LoaderService,
     private store: Store<CoursesState>,
     private router: Router,
-  ) {
-    this.course = new NewCourse(Date.now(), '', 0, '');
-  }
-
-  onDurationChange(durationMin: number) {
-    this.course.durationMin = durationMin;
-  }
-
-  onDateChange(dateUnixMsecs: number) {  // Unix epoch, msecs
-    this.course.creationDate = dateUnixMsecs;
-  }
+  ) {}
 
   onSaveClick() {
-    this.store.dispatch(new CreateCourse(this.course));
+    this.store.dispatch(new CreateCourse({
+      ...this.course.value,
+      creationDate: this.creationDate.value,
+      durationMin: this.durationMin.value,
+    }));
   }
 
   onCancelClick() {

@@ -1,12 +1,11 @@
 <app-breadcrumbs></app-breadcrumbs>
-<div class="add-course" *ngIf="course">
+<div class="add-course" *ngIf="course" [formGroup]="course">
   <div>
     <mat-form-field>
       <input
         matInput
         placeholder="Title"
-        [(ngModel)]="course.title"
-        name="title"
+        formControlName="title"
         required
       />
     </mat-form-field>
@@ -16,20 +15,13 @@
       <textarea
         matInput
         placeholder="Description"
-        [(ngModel)]="course.description"
-        name="description"
+        formControlName="description"
         required
       ></textarea>
     </mat-form-field>
   </div>
-  <app-course-date
-    [creationDate]="course.creationDate"
-    (dateChange)="onDateChange($event)"
-  ></app-course-date>
-  <app-course-duration
-    [durationMin]="course.durationMin"
-    (durationChange)="onDurationChange($event)"
-  ></app-course-duration>
+  <app-course-date [formControl]="creationDate"></app-course-date>
+  <app-course-duration [formControl]="durationMin"></app-course-duration>
   <button
     mat-raised-button
     color="primary"

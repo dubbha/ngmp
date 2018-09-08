@@ -12,7 +12,10 @@ import {
   MatInputModule,
   MatDialogModule,
   MatDatepickerModule,
+  MatChipsModule,
+  MatAutocompleteModule,
 } from '@angular/material';
+
 import { MomentDateModule } from '@angular/material-moment-adapter';
 import { ConfirmDialogComponent } from './dialog/confirm-dialog/confirm-dialog.component';
 import { DialogService } from './dialog/dialog.service';
@@ -32,6 +35,8 @@ import { DialogService } from './dialog/dialog.service';
     MatDialogModule,
     MatDatepickerModule,
     MomentDateModule,
+    MatChipsModule,
+    MatAutocompleteModule,
   ],
   exports: [
     MatIconModule,
@@ -48,6 +53,8 @@ import { DialogService } from './dialog/dialog.service';
     MatDatepickerModule,
     MomentDateModule,
     ConfirmDialogComponent,
+    MatChipsModule,
+    MatAutocompleteModule,
   ],
   declarations: [ConfirmDialogComponent],
   entryComponents: [ConfirmDialogComponent],

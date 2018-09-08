@@ -1,12 +1,11 @@
 <app-breadcrumbs></app-breadcrumbs>
-<div class="add-course">
+<div class="add-course" [formGroup]="course">
   <div>
     <mat-form-field>
       <input
         matInput
         placeholder="Title"
-        [(ngModel)]="course.title"
-        name="title"
+        formControlName="title"
         required
       />
     </mat-form-field>
@@ -16,20 +15,33 @@
       <textarea
         matInput
         placeholder="Description"
-        [(ngModel)]="course.description"
-        name="description"
+        formControlName="description"
         required
       ></textarea>
     </mat-form-field>
   </div>
-  <app-course-date
-    [creationDate]="course.creationDate"
-    (dateChange)="onDateChange($event)"
-  ></app-course-date>
-  <app-course-duration
-    [durationMin]="course.durationMin"
-    (durationChange)="onDurationChange($event)"
-  ></app-course-duration>
+  <app-course-date [formControl]="creationDate"></app-course-date>
+  <app-course-duration [formControl]="durationMin"></app-course-duration>
+  <div>
+    <mat-form-field>
+      <mat-chip-list>
+        <mat-chip>One fish</mat-chip>
+        <mat-chip>Two fish</mat-chip>
+        <mat-chip color="primary" selected>Primary fish</mat-chip>
+        <mat-chip color="accent" selected>Accent fish</mat-chip>
+      </mat-chip-list>
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-form-field>
+      <input type="text" matInput [matAutocomplete]="auto">
+    </mat-form-field>
+
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option [value]="Apple">Apple</mat-option>
+      <mat-option [value]="Banana">Banana</mat-option>
+    </mat-autocomplete>
+  </div>
   <button
     type="button"
     mat-raised-button

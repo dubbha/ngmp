@@ -22,12 +22,12 @@ export function AutoUnsubscribe(subName: string = 'sub') {  // decorator factory
       if (sub) {
         sub.unsubscribe();
       }
-      console.log(`${constructor.name} AutoUnsubscribe decorator called`);
+      // console.log(`${constructor.name} AutoUnsubscribe decorator called`);
 
       if (original && (typeof original === 'function')) {
         original.apply(this, arguments);
 
-        console.log(`${constructor.name} original ngOnDestory called`, original);
+        // console.log(`${constructor.name} original ngOnDestory called`, original);
       }
     };
   };

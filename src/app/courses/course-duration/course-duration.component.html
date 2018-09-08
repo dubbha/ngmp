@@ -1,11 +1,11 @@
-<div>
+<div [formGroup]="form">
   <mat-form-field>
     <input
       matInput
       type="number"
       min="0"
       placeholder="Duration [minutes]"
-      [(ngModel)]="durationMin"
+      formControlName="durationMin"
       (change)="onChange()"
     />
   </mat-form-field>

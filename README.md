@@ -1,19 +1,7 @@
 # Angular Mentoring
 
-## Task 10. NgRx
- - One-way data flow thanks to @ngrx/store
- - No direct HTTP client service method calls, server communications initialized by @ngrx/effects
- - Redux DevTools chrome extension used thanks to @ngrx/store-devtools, logOnly in production
- - CoreModule store serving the application-wide configuration
- - SharedModule store serving the authentication and user data
- - CoursesModule store is lazy-loaded as the module itself, serving the courses data
- - AuthService and UserService are now separated, using the store
- - AuthGuard is now using the store
- - LoaderService using a combination of isLoading selectors
- - All the CoursesModule components are using the store selectors and actions
- - CoursesService is using the store
- - LoginComponent, HeaderComponent, BreadcrumbsComponent are using the store
- - @AutoUnsubscribe() decorator added to unsubscribe components, AOT-aware
+## Task 11. Forms
+ - 
 
 ## Branches
  - Task1. Webpack/Typescript/Angular Intro
@@ -26,6 +14,7 @@
  - Task8. HTTP
  - Task9. RxJS
  - Task10. NgRx
+ - Task11. Forms
 
 ## Run Development Server
 ```

@@ -1,13 +1,13 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges, Inject } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, OnChanges, SimpleChanges, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Store } from '@ngrx/store';
 import { getConfig, ConfigState } from '../../core/store';
 import { CoursesState } from '../store/state';
 import { getCourses, getQueryAndStart } from '../store/selectors';
-import { GetCourses, SetQueryAndStart, DeleteCourse } from '../store/actions';
+import { GetCourses, SetQueryAndStart, DeleteCourse, ResetCourses } from '../store/actions';
 
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, withLatestFrom, tap } from 'rxjs/operators';
 
 import { Course } from './course-list-item/course.model';
@@ -16,14 +16,15 @@ import { OrderByPipe } from './order-by.pipe';
 import { DialogService } from '../../material/dialog/dialog.service';
 import { appRoutingPaths } from '../../app.routing.paths';
 import { LoaderService } from '../../shared/services';
-
+import { AutoUnsubscribe } from '../../core/decorators';
 
 @Component({
   selector: 'app-course-list',
   templateUrl: './course-list.component.html',
   styleUrls: ['./course-list.component.sass']
 })
-export class CourseListComponent implements OnChanges, OnInit {
+@AutoUnsubscribe()
+export class CourseListComponent implements OnInit, OnDestroy, OnChanges {
   @Input() query: string;
 
   query$ = new BehaviorSubject<string>('');
@@ -34,6 +35,7 @@ export class CourseListComponent implements OnChanges, OnInit {
   done = false;
 
   private config: ConfigState;
+  private sub: Subscription;
 
   constructor(
     public coursesService: CoursesService,
@@ -64,20 +66,25 @@ export class CourseListComponent implements OnChanges, OnInit {
       start,
     })));
 
-    this.configStore.select(getConfig).subscribe(config => this.config = config);
+    this.sub = new Subscription();
 
-    this.coursesStore.select(getCourses).subscribe(courses => {
-      this.done = courses.length < this.config.coursesPageLength;
+    this.sub.add(this.configStore.select(getConfig)
+      .subscribe(config => this.config = config));
 
-      this.courses = this.orderByPipe.transform(
-        this.append ? [...this.courses, ...courses] : courses,
-      );
+    this.sub.add(this.coursesStore.select(getCourses)
+      .subscribe(courses => {
+        this.done = courses.length < this.config.coursesPageLength;
 
-      this.append = false;
-    });
+        this.courses = this.orderByPipe.transform(
+          this.append ? [...this.courses, ...courses] : courses,
+        );
 
-    this.coursesStore.select(getQueryAndStart)
-      .subscribe(() => this.coursesStore.dispatch(new GetCourses()));
+        this.append = false;
+      }));
+
+    this.sub.add(this.coursesStore.select(getQueryAndStart)
+      .pipe(distinctUntilChanged((a, b) => a.query === b.query && a.start === b.start))
+      .subscribe(() => this.coursesStore.dispatch(new GetCourses())));
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -86,6 +93,10 @@ export class CourseListComponent implements OnChanges, OnInit {
     if (!firstChange && currentValue !== previousValue) {
       this.query$.next(currentValue);
     }
+  }
+
+  ngOnDestroy() {
+    this.coursesStore.dispatch(new ResetCourses());
   }
 
   onEdit(id: number) {

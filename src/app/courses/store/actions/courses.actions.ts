@@ -19,6 +19,7 @@ export class CoursesActionTypes {
   static readonly DELETE_COURSE = '[Courses] DELETE_COURSE';
   static readonly DELETE_COURSE_SUCCESS = '[Courses] DELETE_COURSE_SUCCESS';
   static readonly DELETE_COURSE_ERROR = '[Courses] DELETE_COURSE_ERROR';
+  static readonly RESET_COURSES = '[Courses] RESET_COURSES';
   static readonly RESET_COURSE = '[Courses] RESET_COURSE';
   static readonly SET_QUERY_AND_START = '[Courses] SET_QUERY_AND_START';
 }
@@ -94,6 +95,10 @@ export class DeleteCourseError implements Action {
   constructor(public payload: Error | string) {}
 }
 
+export class ResetCourses implements Action {
+  readonly type = CoursesActionTypes.RESET_COURSES;
+}
+
 export class ResetCourse implements Action {
   readonly type = CoursesActionTypes.RESET_COURSE;
 }
@@ -119,5 +124,6 @@ export type CoursesActions
   | DeleteCourse
   | DeleteCourseSuccess
   | DeleteCourseError
+  | ResetCourses
   | ResetCourse
   | SetQueryAndStart;

@@ -10,6 +10,7 @@ import { AuthState, getIsAuthenticated } from './shared/store';
 
 import { Subscription } from 'rxjs';
 
+import { AutoUnsubscribe } from './core/decorators';
 import { appRoutingPaths } from './app.routing.paths';
 
 registerLocaleData(localeUk);
@@ -19,6 +20,7 @@ registerLocaleData(localeUk);
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.sass']
 })
+@AutoUnsubscribe()
 export class AppComponent implements OnInit, OnDestroy {
   isAuthenticated: boolean;
   routeSpecificClass: string;
@@ -37,9 +39,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.sub.add(this.router.events.subscribe((event: RouterEvent) => this.setRouteSpecificClasses(event)));
   }
 
-  ngOnDestroy() {
-    this.sub.unsubscribe();
-  }
+  ngOnDestroy() {} // must implement OnDestroy for AutoUnsubscribe decorator to work with AOT
 
   setRouteSpecificClasses(routerEvent: RouterEvent) {
     if (routerEvent instanceof NavigationEnd) {

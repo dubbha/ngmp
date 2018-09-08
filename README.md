@@ -1,10 +1,13 @@
 # Angular Mentoring
 
-## Task 9. RxJS
- - Search input observed, API called on at least 3 chars typed, debounced by 250ms
- - User info is a observable, subscribed to in header
- - canActivate auth guard returning an observable, in addition to canLoad returning a boolean
- - Shared LoaderComponent and LoaderService displaying an overlay and a spinner while loading
+## Task 10. NgRx
+ - CoreModule store serving the application-wide configuration
+ - SharedModule store serving the authentication and user data
+ - CoursesModule store is lazy-loaded as the module itself, serving the courses data
+ - AuthService and UserService are now separated, using the store
+ - LoaderService using a combination of isLoading selectors
+ - All the CoursesModule components are using the store selectors and actions
+ - @AutoUnsubscribe() decorator added to unsubscribe components on destroy, AOT ready
 
 ## Branches
  - Task1. Webpack/Typescript/Angular Intro
@@ -16,6 +19,7 @@
  - Task7. Routing
  - Task8. HTTP
  - Task9. RxJS
+ - Task9. NgRx
 
 ## Run Development Server
 ```

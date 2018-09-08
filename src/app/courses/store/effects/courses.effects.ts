@@ -102,4 +102,9 @@ export class CoursesEffects {
           ),
       ),
     );
+
+  @Effect()
+  deleteCourseSuccess$: Observable<Action> = this.actions$
+    .ofType<CoursesActions.DeleteCourseSuccess>(CoursesActionTypes.DELETE_COURSE_SUCCESS)
+    .pipe(map(() => new CoursesActions.GetCourses()));
 }

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Store } from '@ngrx/store';
 import { getAuthIsLoading, getUserIsLoading } from '../store/selectors';
+import { getCoursesIsLoading } from '../../courses/store';
 
 import { combineLatest } from 'rxjs';
 
@@ -15,8 +16,9 @@ export class LoaderService {
     combineLatest(
       this.store.select(getAuthIsLoading),
       this.store.select(getUserIsLoading),
-    ).subscribe(([authIsLoading, userIsLoading]) => {
-      this.isLoading = authIsLoading || userIsLoading;
+      this.store.select(getCoursesIsLoading),
+    ).subscribe(([authIsLoading, userIsLoading, coursesIsLoading]) => {
+      this.isLoading = authIsLoading || userIsLoading || coursesIsLoading;
     });
   }
 }

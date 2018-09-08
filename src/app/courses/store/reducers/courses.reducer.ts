@@ -99,11 +99,16 @@ export function coursesReducer(
         isLoading: false,
       };
 
+    case CoursesActionTypes.RESET_COURSES:
+      return {
+        ...state,
+        courses: initialCoursesState.courses,
+      };
+
     case CoursesActionTypes.RESET_COURSE:
       return {
         ...state,
-        course: null,
-        isLoading: false,
+        course: initialCoursesState.course,
       };
 
     case CoursesActionTypes.SET_QUERY_AND_START:

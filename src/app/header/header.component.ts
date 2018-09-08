@@ -6,16 +6,18 @@ import { getIsAuthenticated, getUserInfo, AuthState } from '../shared/store';
 import * as AuthActions from '../shared/store/actions';
 import * as UserActions from '../shared/store/actions';
 
+import { Subscription } from 'rxjs';
+
 import { AuthService } from '../shared/services';
 import { UserPublicInfo } from '../shared/models';
-
-import { Subscription } from 'rxjs';
+import { AutoUnsubscribe } from '../core/decorators';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.sass'],
 })
+@AutoUnsubscribe()
 export class HeaderComponent implements OnInit, OnDestroy {
   isAuthenticated: boolean;
   user: UserPublicInfo;
@@ -36,9 +38,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.sub.add(this.router.events.subscribe((event: RouterEvent) => this.getUserInfo(event)));
   }
 
-  ngOnDestroy() {
-    this.sub.unsubscribe();
-  }
+  ngOnDestroy() {}  // must implement OnDestroy for AutoUnsubscribe decorator to work with AOT
 
   logout() {
     this.store.dispatch(new AuthActions.Logout());

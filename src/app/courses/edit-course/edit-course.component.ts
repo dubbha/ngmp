@@ -8,12 +8,14 @@ import { Subscription, Subscriber } from 'rxjs';
 
 import { Course } from '../course-list/course-list-item/course.model';
 import { appRoutingPaths } from '../../app.routing.paths';
+import { AutoUnsubscribe } from '../../core/decorators';
 
 @Component({
   selector: 'app-edit-course',
   templateUrl: './edit-course.component.html',
   styleUrls: ['./edit-course.component.sass']
 })
+@AutoUnsubscribe()
 export class EditCourseComponent implements OnInit, OnDestroy {
   course: Course;
   title: string;
@@ -35,7 +37,6 @@ export class EditCourseComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.store.dispatch(new ResetCourse());
-    this.sub.unsubscribe();
   }
 
   onDurationChange(durationMin: number) {
@@ -53,5 +54,4 @@ export class EditCourseComponent implements OnInit, OnDestroy {
   onCancelClick() {
     this.router.navigateByUrl(appRoutingPaths.courses);
   }
-
 }

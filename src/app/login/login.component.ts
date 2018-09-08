@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 
 import { Store } from '@ngrx/store';
+import { AuthState } from '../shared/store';
 import * as AuthActions from '../shared/store/actions';
 
 @Component({
@@ -12,7 +13,7 @@ export class LoginComponent {
   public email: string;
   public password: string;
 
-  constructor(private store: Store<any>) {}
+  constructor(private store: Store<AuthState>) {}
 
   onSubmit(e: Event) {
     e.preventDefault();

@@ -5,9 +5,12 @@
  - SharedModule store serving the authentication and user data
  - CoursesModule store is lazy-loaded as the module itself, serving the courses data
  - AuthService and UserService are now separated, using the store
+ - AuthGuard is now using the store
  - LoaderService using a combination of isLoading selectors
  - All the CoursesModule components are using the store selectors and actions
- - @AutoUnsubscribe() decorator added to unsubscribe components on destroy, AOT ready
+ - CoursesService is using the store
+ - LoginComponent, HeaderComponent, BreadcrumbsComponent are using the store
+ - @AutoUnsubscribe() decorator added to unsubscribe components on destroy, AOT-aware
 
 ## Branches
  - Task1. Webpack/Typescript/Angular Intro
@@ -19,7 +22,7 @@
  - Task7. Routing
  - Task8. HTTP
  - Task9. RxJS
- - Task9. NgRx
+ - Task10. NgRx
 
 ## Run Development Server
 ```

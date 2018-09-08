@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { finalize } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
+import { CoursesState, CreateCourse } from '../store';
 
 import { NewCourse } from '../course-list/course-list-item/course.model';
-import { CoursesService } from '../courses.service';
 import { LoaderService } from '../../shared/services';
 import { appRoutingPaths } from '../../app.routing.paths';
 
@@ -17,9 +17,9 @@ export class AddCourseComponent {
   course: NewCourse;
 
   constructor(
-    private coursesService: CoursesService,
-    private router: Router,
     public loaderService: LoaderService,
+    private store: Store<CoursesState>,
+    private router: Router,
   ) {
     this.course = new NewCourse(Date.now(), '', 0, '');
   }
@@ -33,12 +33,7 @@ export class AddCourseComponent {
   }
 
   onSaveClick() {
-    this.loaderService.start();
-    this.coursesService.createCourse(this.course)
-      .pipe(finalize(() => this.loaderService.stop()))  // stop the loader on both success or failure
-      .subscribe(() => {
-        this.router.navigateByUrl(appRoutingPaths.courses);
-      });
+    this.store.dispatch(new CreateCourse(this.course));
   }
 
   onCancelClick() {

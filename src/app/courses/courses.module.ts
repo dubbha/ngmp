@@ -2,6 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { coursesReducer, CoursesEffects } from './store';
+
 import { MaterialModule } from '../material/material.module';
 import { CourseListComponent } from './course-list/course-list.component';
 import { CourseSearchComponent } from './course-search/course-search.component';
@@ -26,6 +30,8 @@ import { CoursesRoutingModule, coursesRouterComponents } from './courses.routing
     FormsModule,
     ReactiveFormsModule,
     CoursesRoutingModule,
+    StoreModule.forFeature('courses', coursesReducer),
+    EffectsModule.forFeature([CoursesEffects]),
   ],
   declarations: [
     CourseListComponent,

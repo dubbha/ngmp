@@ -23,7 +23,7 @@ export const appRoutingComponents = [
   imports: [
     RouterModule.forRoot(
       routes,
-      { enableTracing: true }  // enable for debugging
+      { enableTracing: false }  // enable for debugging
     ),
   ],
   exports: [

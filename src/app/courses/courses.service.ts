@@ -2,42 +2,41 @@ import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
 
-import { ConfigService } from '../core/services';
-import { LoaderService } from '../shared/services';
 import { Course } from './course-list/course-list-item/course.model';
 
-const dayms = 86400000;                       // milliseconds in a day
+import { Store } from '@ngrx/store';
+import { getConfig, ConfigState } from '../core/store';
+import { getQueryAndStart } from './store/selectors';  // avoid circular dependencies
+import { QueryAndStart, CoursesState } from './store/state';
 
-export interface IQueryAndStart {
-  query: string;
-  start: number;
-}
+const dayms = 86400000;  // milliseconds in a day
 
 @Injectable()
 export class CoursesService {
   courses: Course[] = [];
   nextId: number;
 
+  private config: ConfigState;
+  private queryAndStart: QueryAndStart;
+
   constructor(
-    @Inject(ConfigService) private config,
-    private loadingService: LoaderService,
+    private configStore: Store<ConfigState>,
+    private coursesStore: Store<CoursesState>,
     private http: HttpClient,
-  ) {}
+  ) {
+    this.configStore.select(getConfig).subscribe(next => this.config = next);
+    this.coursesStore.select(getQueryAndStart).subscribe(next => this.queryAndStart = next);
+  }
 
-  getCourses(queryAndStart: Observable<IQueryAndStart>): Observable<any> {
-    return queryAndStart.pipe(
-      switchMap(({ query, start }) => {
-        const params: { start: string, count: string, query?: string } = { start: `${start}`, count: `${this.config.coursesPageLength}` };
-        if (query !== '') {
-          params.query = query;
-        }
+  getCourses(): Observable<any> {
+    const { query, start } = this.queryAndStart;
+    const params: { start: string, count: string, query?: string } = { start: `${start}`, count: `${this.config.coursesPageLength}` };
+    if (query !== '') {
+      params.query = query;
+    }
 
-        this.loadingService.start();
-        return this.http.get(`${this.config.apiBaseUrl}/${this.config.apiEndpoints.courses}`, { params });
-      })
-    );
+    return this.http.get(`${this.config.apiBaseUrl}/${this.config.apiEndpoints.courses}`, { params });
   }
 
   getCourse(id: number): Observable<any> {

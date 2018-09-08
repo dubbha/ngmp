@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { CanLoad, Router } from '@angular/router';
 
-import { AuthService } from '../services';
+import { Store } from '@ngrx/store';
+import { AuthState, getIsAuthenticated } from '../store';
+
 import { appRoutingPaths } from '../../app.routing.paths';
 import { Observable } from 'rxjs';
 
@@ -10,12 +12,11 @@ export class AuthGuard implements CanLoad {
   isAuthenticated: boolean;
 
   constructor(
-    private authService: AuthService,
     private router: Router,
+    private store: Store<AuthState>,
   ) {
-    this.authService.isAuthenticated.subscribe(isAuthenticated => {
-        this.isAuthenticated = isAuthenticated;
-    });
+    this.store.select(getIsAuthenticated)
+      .subscribe(isAuthenticated => this.isAuthenticated = isAuthenticated);
   }
 
   canLoad(): boolean {
@@ -26,6 +27,6 @@ export class AuthGuard implements CanLoad {
   }
 
   canActivate(): Observable<boolean> {
-    return this.authService.isAuthenticated;
+    return this.store.select(getIsAuthenticated);
   }
 }

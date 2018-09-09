@@ -91,7 +91,18 @@ server.get('/api/courses', (req, res) => {  // get courses list
 server.get('/api/courses/:id', (req, res) => {  // get specific course by id
   const id = req.params.id;
   const courses =  router.db.getState().courses;
-  res.json(courses.find(c => c.id === +id));
+  res.json(courses.find(c => c.id === +id));  // numeric ids
+});
+
+server.get('/api/authors', (req, res) => {  // get authors list
+  res.json(router.db.getState().authors);
+});
+
+server.get('/api/authors/:id', (req, res) => {  // get author by id
+  const id = req.params.id;
+  const authors = router.db.getState().authors;
+
+  res.json(authors.find(a => a.id === id));  // string ids
 });
 
 server.get('/api/users', (req, res) => res.status(403).json({ result: 'Forbidden' }));     // users and sessions are only used internally

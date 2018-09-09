@@ -1,4 +1,4 @@
-import { Course } from '../../course-list/course-list-item/course.model';
+import { Course, Author } from '../../models';
 
 export interface QueryAndStart {
   query: string;
@@ -7,6 +7,7 @@ export interface QueryAndStart {
 
 export interface CoursesState {
   readonly courses: Course[];
+  readonly authors: Author[];
   readonly course: Course;
   readonly queryAndStart: QueryAndStart;
   readonly isLoading: boolean;
@@ -14,6 +15,7 @@ export interface CoursesState {
 
 export const initialCoursesState: CoursesState = {
   courses: [],
+  authors: [],
   course: null,
   queryAndStart: { query: '', start: 0 },
   isLoading: false,

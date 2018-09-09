@@ -6,6 +6,7 @@ export class NewCourse implements Partial<CourseInterface> {
     public title: string,
     public durationMin: number,
     public description: string,
+    public authorIds: string[],
   ) {
   }
 }
@@ -14,8 +15,8 @@ export class Course extends NewCourse implements CourseInterface {
   public id: number;
   public topRated?: boolean;
 
-  constructor(id, creationDate, title, durationMin, description, topRated?) {
-    super(creationDate, title, durationMin, description);
+  constructor(id, creationDate, title, durationMin, description, authorIds, topRated?) {
+    super(creationDate, title, durationMin, description, authorIds);
     this.id = id;
     this.topRated = topRated || false;
   }

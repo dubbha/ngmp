@@ -99,6 +99,25 @@ export function coursesReducer(
         isLoading: false,
       };
 
+    case CoursesActionTypes.GET_AUTHORS:
+      return {
+        ...state,
+        isLoading: true,
+      };
+
+    case CoursesActionTypes.GET_AUTHORS_SUCCESS:
+      return {
+        ...state,
+        authors: action.payload,
+        isLoading: false,
+      };
+
+    case CoursesActionTypes.GET_AUTHORS_ERROR:
+      return {
+        ...state,
+        isLoading: false,
+      };
+
     case CoursesActionTypes.RESET_COURSES:
       return {
         ...state,

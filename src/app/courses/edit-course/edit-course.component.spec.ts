@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
 import { EditCourseComponent } from './edit-course.component';
 import { MaterialModule } from '../../material/material.module';
 import { CoursesService } from '../courses.service';
-import { Course } from '../course-list/course-list-item/course.model';
+import { Course } from '../models';
 
 import { of } from 'rxjs';
 
@@ -17,7 +17,7 @@ import { appRoutingPaths } from '../../app.routing.paths';
 
 describe('EditCourseComponent', () => {
   const coursesServiceStub: Partial<CoursesService> = {
-    getCourse: () => of(new Course(42, 1530287255000, 'title', 100, 'description')),
+    getCourse: () => of(new Course(42, 1530287255000, 'title', 100, 'description', [])),
     updateCourse: () => of({ success: true }),
   };
 
@@ -73,7 +73,7 @@ describe('EditCourseComponent', () => {
   it('should retrieve the course data on init', () => {
     spyOn(service, 'getCourse').and.callThrough();
     component.ngOnInit();
-    expect(component.course).toEqual(new Course(42, 1530287255000, 'title', 100, 'description'));
+    expect(component.course).toEqual(new Course(42, 1530287255000, 'title', 100, 'description', []));
   });
 
   it('should receive course duration', () => {

@@ -1,5 +1,12 @@
 import { Component } from '@angular/core';
-import { FormControl, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import {
+  FormControl,
+  ControlValueAccessor,
+  Validators,
+  Validator,
+  NG_VALUE_ACCESSOR,
+  NG_VALIDATORS,
+} from '@angular/forms';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
 import * as moment from 'moment';
 
@@ -23,46 +30,34 @@ const MY_FORMATS = {
   styleUrls: ['./course-date.component.sass'],
   providers: [
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
-    { provide: NG_VALUE_ACCESSOR, useExisting: CourseDateComponent, multi: true }
+    { provide: NG_VALUE_ACCESSOR, useExisting: CourseDateComponent, multi: true },
+    { provide: NG_VALIDATORS, useExisting: CourseDateComponent, multi: true },
   ],
 })
-export class CourseDateComponent implements ControlValueAccessor {
-  // @Input() creationDate: number;
-  // @Output() dateChange = new EventEmitter<number>();
-  // form = new FormGroup({
-  //   durationMin: new FormControl(0)
-  // });
-  // onChange: Function;
-
-  // // get durationMin() { return this.form.get('durationMin').value; }
-
+export class CourseDateComponent implements ControlValueAccessor, Validator {
   date: FormControl;
   startDate: moment.Moment;
   onChange: Function;
 
-  // ngOnInit() {
-  //   // this.startDate = moment(this.creationDate);
-  //   // this.date = new FormControl(moment(this.creationDate));
-  // }
-
-  // onDateChange() {
-  //   if (this.date.value) { // date is valid
-  //     this.dateChange.emit(this.date.value.valueOf());  // valueOf() converts back to milliseconds
-  //   }
-  // }
-
   writeValue(value) {
     this.startDate = moment(value);
-    this.date = new FormControl(moment(value));
+    this.date = new FormControl(moment(value), [Validators.required]);
   }
 
   registerOnChange(fn) {
     this.onChange = () => {
+      console.log(this.date.value);
       if (this.date.value) { // date is valid
         fn(this.date.value.valueOf());  // valueOf() converts back to milliseconds
+      } else {
+        fn(null);
       }
     };
   }
 
   registerOnTouched(fn) {}
+
+  validate(c: FormControl) {
+    return this.date.errors;
+  }
 }

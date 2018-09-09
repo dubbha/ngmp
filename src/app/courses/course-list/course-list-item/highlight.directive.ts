@@ -1,5 +1,5 @@
 import { Directive, Input, ElementRef, Renderer2, OnInit } from '@angular/core';
-import { Course } from './course.model';
+import { Course } from '../../models';
 
 @Directive({
   selector: '[appHighlight]'

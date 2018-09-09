@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Course } from './course-list-item/course.model';
+import { Course } from '../models';
 
 const numericSort = (a: Course, b: Course, key: string, order: string): number => {
   if (order === 'asc') {

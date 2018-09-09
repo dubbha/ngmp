@@ -107,4 +107,17 @@ export class CoursesEffects {
   deleteCourseSuccess$: Observable<Action> = this.actions$
     .ofType<CoursesActions.DeleteCourseSuccess>(CoursesActionTypes.DELETE_COURSE_SUCCESS)
     .pipe(map(() => new CoursesActions.GetCourses()));
+
+  @Effect()
+  getAuthors$: Observable<Action> = this.actions$
+    .ofType<CoursesActions.GetAuthors>(CoursesActionTypes.GET_AUTHORS)
+    .pipe(
+      switchMap(() =>
+        this.coursesService.getAuthors()
+          .pipe(
+            map((res: any) => new CoursesActions.GetAuthorsSuccess(res)),
+            catchError(err => of(new CoursesActions.GetAuthorsError(err))),
+          ),
+      ),
+    );
 }

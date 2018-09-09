@@ -5,7 +5,7 @@ import { Component,
   OnInit,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { Course } from './course.model';
+import { Course } from '../../models';
 
 @Component({
   selector: 'app-course-list-item',

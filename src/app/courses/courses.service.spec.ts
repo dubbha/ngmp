@@ -3,7 +3,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 
 import { CoursesService } from './courses.service';
 import { ConfigService } from '../core/services';
-import { Course } from './course-list/course-list-item/course.model';
+import { Course } from './models';
 
 describe('CoursesService', () => {
   let httpTestingController: HttpTestingController;

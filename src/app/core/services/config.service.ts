@@ -7,6 +7,7 @@ export const config = {
     logout: 'logout',
     user: 'user',
     courses: 'courses',
+    authors: 'authors',
   },
   coursesPageLength: 2,
 };

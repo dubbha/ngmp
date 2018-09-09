@@ -3,7 +3,7 @@ import { DebugElement, Component } from '@angular/core';
 import { By } from '@angular/platform-browser';
 
 import { CourseListItemComponent } from './course-list-item.component';
-import { Course } from './course.model';
+import { Course } from '../../models';
 import { MaterialModule } from '../../../material/material.module';
 import { DurationPipe } from './duration.pipe';
 

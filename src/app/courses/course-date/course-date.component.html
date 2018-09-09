@@ -6,8 +6,12 @@
       placeholder="Date [DD/MM/YYYY]"
       [formControl]="date"
       (dateChange)="onChange()"
+      required
     />
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker [startAt]="startDate"></mat-datepicker>
+    <mat-error *ngIf="date.hasError('required')">
+      Date is <strong>required</strong> and must have a format of <strong>DD/MM/YYYY</strong>
+    </mat-error>
   </mat-form-field>
 </div>

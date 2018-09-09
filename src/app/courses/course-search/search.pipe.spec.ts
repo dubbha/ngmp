@@ -1,5 +1,5 @@
 import { SearchPipe } from './search.pipe';
-import { Course } from '../course-list/course-list-item/course.model';
+import { Course } from '../models';
 
 describe('SearchPipe', () => {
   const haystack: Course[] = [

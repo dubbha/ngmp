@@ -1,13 +1,21 @@
-<div [formGroup]="form">
+<div>
   <mat-form-field>
     <input
       matInput
-      type="number"
-      min="0"
       placeholder="Duration [minutes]"
-      formControlName="durationMin"
+      [formControl]="durationMin"
       (change)="onChange()"
+      required
     />
+    <mat-error *ngIf="durationMin.hasError('required')">
+      Duration is <strong>required</strong>
+    </mat-error>
+    <mat-error *ngIf="durationMin.hasError('pattern')">
+      Duration value must be a <strong>number</strong>
+    </mat-error>
+    <mat-error *ngIf="durationMin.hasError('min') && !durationMin.hasError('pattern')">
+      Duration must be at least <strong>1</strong> minute
+    </mat-error>
   </mat-form-field>
-  <span class="duration">{{durationMin | duration}}</span>
+  <span class="duration">{{durationMin.value | duration}}</span>
 </div>

@@ -6,7 +6,7 @@ import { of } from 'rxjs';
 import { BreadcrumbsComponent } from './breadcrumbs.component';
 import { MaterialModule } from '../../material/material.module';
 import { CoursesService } from '../courses.service';
-import { Course } from '../course-list/course-list-item/course.model';
+import { Course } from '../models';
 
 import { RouterStub } from '../../testing/router-stubs';
 import { appRoutingPaths } from '../../app.routing.paths';

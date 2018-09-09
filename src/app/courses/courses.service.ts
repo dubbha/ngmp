@@ -1,9 +1,9 @@
-import { Injectable, Inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 
-import { Course } from './course-list/course-list-item/course.model';
+import { Course } from './models';
 
 import { Store } from '@ngrx/store';
 import { getConfig, ConfigState } from '../core/store';
@@ -44,13 +44,14 @@ export class CoursesService {
   }
 
   createCourse(partial: Partial<Course>) {
-    const { creationDate, title, durationMin, description } = partial; // can't create a top-rated course right away
+    const { creationDate, title, durationMin, description, authorIds } = partial; // can't create a top-rated course right away
     const course = new Course(
       this.nextId++,
       creationDate || Date.now(),   // future supported
       title,
       durationMin,
       description,
+      authorIds,
     );
 
     return this.http.post(`${this.config.apiBaseUrl}/${this.config.apiEndpoints.courses}`,  course);
@@ -62,6 +63,14 @@ export class CoursesService {
 
   deleteCourse(id: number) {
     return this.http.delete(`${this.config.apiBaseUrl}/${this.config.apiEndpoints.courses}/${id}`);
+  }
+
+  getAuthors(): Observable<any> {
+    return this.http.get(`${this.config.apiBaseUrl}/${this.config.apiEndpoints.authors}`);
+  }
+
+  getAuthor(id: string): Observable<any> {
+    return this.http.get(`${this.config.apiBaseUrl}/${this.config.apiEndpoints.authors}/${id}`);
   }
 
   isCourseUpcoming(course: Course): boolean {

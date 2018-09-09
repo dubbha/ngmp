@@ -10,7 +10,7 @@ import { GetCourses, SetQueryAndStart, DeleteCourse, ResetCourses } from '../sto
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, withLatestFrom, tap } from 'rxjs/operators';
 
-import { Course } from './course-list-item/course.model';
+import { Course } from '../models';
 import { CoursesService } from '../courses.service';
 import { OrderByPipe } from './order-by.pipe';
 import { DialogService } from '../../material/dialog/dialog.service';

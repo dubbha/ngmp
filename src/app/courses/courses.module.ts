@@ -17,9 +17,10 @@ import { SearchPipe } from './course-search/search.pipe';
 import { HighlightDirective } from './course-list/course-list-item/highlight.directive';
 import { CoursesListNoDataComponent } from './course-list/courses-list-no-data/courses-list-no-data.component';
 import { CourseAddButtonComponent } from './course-add-button/course-add-button.component';
+import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
 import { CourseDateComponent } from './course-date/course-date.component';
 import { CourseDurationComponent } from './course-duration/course-duration.component';
-import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
+import { CourseAuthorsComponent } from './course-authors/course-authors.component';
 
 import { CoursesRoutingModule, coursesRouterComponents } from './courses.routing.module';
 
@@ -43,9 +44,10 @@ import { CoursesRoutingModule, coursesRouterComponents } from './courses.routing
     HighlightDirective,
     CoursesListNoDataComponent,
     CourseAddButtonComponent,
+    BreadcrumbsComponent,
     CourseDateComponent,
     CourseDurationComponent,
-    BreadcrumbsComponent,
+    CourseAuthorsComponent,
     coursesRouterComponents
   ],
   providers: [

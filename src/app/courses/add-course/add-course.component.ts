@@ -18,24 +18,14 @@ import { Author } from '../models';
   templateUrl: './add-course.component.html',
   styleUrls: ['./add-course.component.sass']
 })
-export class AddCourseComponent implements OnInit {
+export class AddCourseComponent {
   course = new FormGroup({
     title: new FormControl('', [Validators.required, Validators.maxLength(50)]),
     description: new FormControl('', [Validators.required, Validators.maxLength(500)]),
   });
   creationDate = new FormControl(Date.now());
   durationMin = new FormControl(0);
-  authors = new FormControl('');
-
-  allAuthors: Author[] = [];
-  filteredAllAuthors: Author[];
-  courseAuthors: Author[] = [];
-  separatorKeysCodes: number[] = [ENTER, COMMA];
-  selectable = true;
-  removable = true;
-  addOnBlur = false;
-
-  @ViewChild('authorsInput') authorsInput: ElementRef<HTMLInputElement>;
+  authors = new FormControl([]);
 
   constructor(
     public loaderService: LoaderService,
@@ -43,21 +33,6 @@ export class AddCourseComponent implements OnInit {
     private router: Router,
   ) {}
 
-  ngOnInit() {
-    this.store.dispatch(new GetAuthors());
-    this.store.select(getAuthors).subscribe(next => this.allAuthors = next);
-
-    this.authors.valueChanges.pipe(
-        tap(console.log),
-        startWith(null),
-        map((prefix: string | null) => prefix
-          ? this.allAuthors
-            .filter(this.isAuthorNotYetSelected)
-            .filter(a => a.name.startsWith(prefix))
-          : this.allAuthors.filter(this.isAuthorNotYetSelected)),
-      )
-      .subscribe(next => this.filteredAllAuthors = next);
-  }
 
   hasError(control, error) {
     return this.course.get(control).hasError(error);
@@ -73,6 +48,8 @@ export class AddCourseComponent implements OnInit {
     console.log(this.durationMin.valid);
     console.log(this.creationDate.value);
     console.log(this.durationMin.value);
+    console.log(this.authors.value);
+    console.log(this.authors.errors);
 
     if (this.course.valid && this.creationDate.valid && this.durationMin.valid) {
       this.store.dispatch(new CreateCourse({
@@ -86,53 +63,4 @@ export class AddCourseComponent implements OnInit {
   onCancelClick() {
     this.router.navigateByUrl(appRoutingPaths.courses);
   }
-
-  add(event: MatChipInputEvent): void {
-    const { input, value } = event;
-
-    console.log('event', event);
-    console.log('event.value', event.value);
-
-    // Add author
-    if (value) {
-      const foundAuthor = this.allAuthors
-        .filter(this.isAuthorNotYetSelected)
-        .find(a => a.name.startsWith(value.trim()));
-
-      console.log('add event, found:', foundAuthor);
-
-      if (foundAuthor) {
-        this.courseAuthors.push(foundAuthor);
-      }
-    }
-
-    // Reset the input value
-    if (input) {
-      input.value = '';
-    }
-
-    this.authors.setValue(null);
-  }
-
-  remove(author: Author): void {
-    this.courseAuthors = this.courseAuthors.filter(a => !(a.id === author.id));
-  }
-
-  selected(event: MatAutocompleteSelectedEvent): void {
-    const { value, viewValue } = event.option;
-    const author = new Author(value, viewValue);
-
-    if (this.isAuthorNotYetSelected(author)) {  // avoid duplication on type and then select
-      this.courseAuthors.push(new Author(value, viewValue));
-    }
-
-    this.authorsInput.nativeElement.value = '';
-    this.authors.setValue(null);
-  }
-
-  isAuthorNotYetSelected = (author) => !this.courseAuthors.some(alreadySelected => author.id === alreadySelected.id);
 }
-
-// https://material.angular.io/components/autocomplete/overview
-// https://material.angular.io/components/chips/overview
-// https://stackblitz.com/angular/moynkppaveam?file=app%2Fchips-autocomplete-example.html

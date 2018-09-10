@@ -37,7 +37,8 @@
     </div>
     <app-course-date [formControl]="creationDate"></app-course-date>
     <app-course-duration [formControl]="durationMin"></app-course-duration>
-    <div>
+    <app-course-authors [formControl]="authors"></app-course-authors>
+    <!-- <div>
       <mat-form-field>
         <mat-chip-list #authorsList>
           <mat-chip
@@ -60,24 +61,12 @@
             (matChipInputTokenEnd)="add($event)" />
         </mat-chip-list>
       </mat-form-field>
-      <!-- [displayWith]="displayAuthor" -->
       <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
         <mat-option *ngFor="let author of filteredAllAuthors" [value]="author.id">
           {{author.name}}
         </mat-option>
       </mat-autocomplete>
-    </div>
-    <div>
-      <!-- <mat-form-field>
-        <input type="text" matInput [matAutocomplete]="auto">
-      </mat-form-field>
-
-      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayAuthor">
-        <mat-option *ngFor="let author of authors" [value]="author">
-          {{author.name}}
-        </mat-option>
-      </mat-autocomplete> -->
-    </div>
+    </div> -->
     <button
       type="submit"
       mat-raised-button

@@ -1,9 +1,16 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { Store } from '@ngrx/store';
-import { getCourse, GetCourse, ResetCourse, UpdateCourse, CoursesState } from '../store';
+import {
+  getCourse,
+  GetCourse,
+  ResetCourse,
+  UpdateCourse,
+  CoursesState,
+  getCourseAuthors,
+} from '../store';
 
 import { Subscription, Subscriber } from 'rxjs';
 
@@ -18,11 +25,12 @@ import { AutoUnsubscribe } from '../../core/decorators';
 @AutoUnsubscribe()
 export class EditCourseComponent implements OnInit, OnDestroy {
   course = new FormGroup({
-    title: new FormControl(),
-    description: new FormControl(),
+    title: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+    description: new FormControl('', [Validators.required, Validators.maxLength(500)]),
+    creationDate: new FormControl(Date.now()),
+    durationMin: new FormControl(0),
+    authors: new FormControl([]),
   });
-  creationDate = new FormControl();
-  durationMin = new FormControl();
 
   public sub: Subscription;
 
@@ -39,12 +47,12 @@ export class EditCourseComponent implements OnInit, OnDestroy {
     this.sub.add(this.store.select(getCourse)
       .subscribe(course => {
         if (course) {
-          const { id, title, description, creationDate, durationMin } = course;
+          const { id, title, description, creationDate, durationMin, authorIds } = course;
 
           this.id = id;
-          this.course.setValue({ title, description });
-          this.creationDate.setValue(creationDate);
-          this.durationMin.setValue(durationMin);
+
+          this.store.select(getCourseAuthors)
+            .subscribe(authors => this.course.setValue({ title, description, creationDate, durationMin, authors }));
         }
       }));
     this.sub.add(this.route.params.subscribe(params => this.store.dispatch(new GetCourse(+params.id))));
@@ -54,13 +62,16 @@ export class EditCourseComponent implements OnInit, OnDestroy {
     this.store.dispatch(new ResetCourse());
   }
 
-  onSaveClick() {
-    this.store.dispatch(new UpdateCourse({
-      id: this.id,
-      ...this.course.value,
-      creationDate: this.creationDate.value,
-      durationMin: this.durationMin.value,
-    }));
+  onSave() {
+    this.course.controls.authors.markAsPending();
+    this.course.controls.authors.updateValueAndValidity();
+
+    if (this.course.valid) {
+      const { title, description, durationMin, creationDate, authors } = this.course.value;
+      const authorIds = authors.map(a => a.id);
+      const id = this.id;
+      this.store.dispatch(new UpdateCourse({ id, title, description, durationMin, creationDate, authorIds }));
+    }
   }
 
   onCancelClick() {

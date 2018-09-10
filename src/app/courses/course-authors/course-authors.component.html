@@ -1,6 +1,6 @@
 <div>
   <mat-form-field>
-    <mat-chip-list #authorsList>
+    <mat-chip-list #authorsList required errorState>
       <mat-chip
         *ngFor="let author of courseAuthors"
         [selectable]="selectable"
@@ -20,8 +20,15 @@
         [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
         [matChipInputAddOnBlur]="addOnBlur"
         (matChipInputTokenEnd)="add($event)"
-        required />
+        (blur)="updateErrors()"
+      />
     </mat-chip-list>
+    <mat-error *ngIf="authorsCtrl.hasError('required')">
+      At least one author is <strong>required</strong>
+    </mat-error>
+    <mat-error *ngIf="authorsCtrl.hasError('invalid')">
+      Authors list is <strong>invalid</strong>
+    </mat-error>
   </mat-form-field>
   <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
     <mat-option *ngFor="let author of filteredAllAuthors" [value]="author.id">

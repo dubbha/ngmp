@@ -46,7 +46,6 @@ export class CourseDateComponent implements ControlValueAccessor, Validator {
 
   registerOnChange(fn) {
     this.onChange = () => {
-      console.log(this.date.value);
       if (this.date.value) { // date is valid
         fn(this.date.value.valueOf());  // valueOf() converts back to milliseconds
       } else {

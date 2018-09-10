@@ -1,12 +1,9 @@
-<form>
-  <mat-icon color="primary">search</mat-icon>
-  <mat-form-field>
-    <input
-      matInput
-      placeholder="Find course by name, fragment, or date"
-      (keyup)="onQueryChange()"
-      [(ngModel)]="query"
-      name="query"
-    />
-  </mat-form-field>
-</form>
+<mat-icon color="primary">search</mat-icon>
+<mat-form-field>
+  <input
+    matInput
+    placeholder="Find course by name, fragment, or date"
+    (keyup)="onQueryChange()"
+    [formControl]="query"
+  />
+</mat-form-field>

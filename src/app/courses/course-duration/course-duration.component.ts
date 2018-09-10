@@ -32,7 +32,6 @@ export class CourseDurationComponent implements ControlValueAccessor, Validator 
   registerOnTouched(fn) {}
 
   validate(c: FormControl) {
-    console.log('duration validate');
     return this.durationMin.errors;
   }
 }

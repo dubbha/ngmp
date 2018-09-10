@@ -3,6 +3,7 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-course-search',
@@ -12,9 +13,9 @@ import {
 export class CourseSearchComponent {
   @Output() queryChange = new EventEmitter<string>();
 
-  query = '';
+  query = new FormControl('');
 
   onQueryChange() {
-    this.queryChange.emit(this.query);
+    this.queryChange.emit(this.query.value);
   }
 }

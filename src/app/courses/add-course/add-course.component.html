@@ -1,7 +1,7 @@
 <app-breadcrumbs></app-breadcrumbs>
-<div class="add-course">
+<div class="course">
   <form [formGroup]="course" (ngSubmit)="onSave()">
-    <div>
+    <section>
       <mat-form-field>
         <input
           matInput
@@ -17,8 +17,8 @@
           Please reduce its current length of <strong>{{getError('title', 'maxlength').actualLength}}</strong> by <strong>{{getError('title', 'maxlength').actualLength - getError('title', 'maxlength').requiredLength}}</strong> characters.
         </mat-error>
       </mat-form-field>
-    </div>
-    <div>
+    </section>
+    <section>
       <mat-form-field>
         <textarea
           matInput
@@ -34,44 +34,20 @@
           Please reduce its current length of <strong>{{getError('description', 'maxlength').actualLength}}</strong> by <strong>{{getError('description', 'maxlength').actualLength - getError('description', 'maxlength').requiredLength}}</strong> characters.
         </mat-error>
       </mat-form-field>
-    </div>
-    <app-course-date [formControl]="creationDate"></app-course-date>
-    <app-course-duration [formControl]="durationMin"></app-course-duration>
-    <app-course-authors [formControl]="authors"></app-course-authors>
-    <!-- <div>
-      <mat-form-field>
-        <mat-chip-list #authorsList>
-          <mat-chip
-            *ngFor="let author of courseAuthors"
-            [selectable]="selectable"
-            [removable]="removable"
-            (removed)="remove(author)"
-          >
-            {{author.name}}
-            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-          </mat-chip>
-          <input
-            placeholder="Authors"
-            #authorsInput
-            [formControl]="authors"
-            [matAutocomplete]="auto"
-            [matChipInputFor]="authorsList"
-            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-            [matChipInputAddOnBlur]="addOnBlur"
-            (matChipInputTokenEnd)="add($event)" />
-        </mat-chip-list>
-      </mat-form-field>
-      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-        <mat-option *ngFor="let author of filteredAllAuthors" [value]="author.id">
-          {{author.name}}
-        </mat-option>
-      </mat-autocomplete>
-    </div> -->
+    </section>
+    <section>
+      <app-course-date [formControl]="course.controls.creationDate"></app-course-date>
+    </section>
+    <section>
+      <app-course-duration [formControl]="course.controls.durationMin"></app-course-duration>
+    </section>
+    <section>
+      <app-course-authors [formControl]="course.controls.authors"></app-course-authors>
+    </section>
     <button
       type="submit"
       mat-raised-button
       color="primary"
-      [disabled]="loaderService.isLoading"
     >
       Save
     </button>

@@ -15,7 +15,9 @@ export const getCoursesIsLoading = createSelector(getCoursesState, (state: Cours
 // course data might not yet be retrieved from the server when this selector is subscribed to
 export const getCourseTitle = createSelector(getCourse, (course: Course) => course ? course.title : '');
 
-export const getCourseAuthors = createSelector(getCourse, getAuthors,
-  (course: Course, authors: Author[]) => {
-    course.authorIds.map(id => authors.find(a => a.id === id));
-  });
+export const getCourseAuthors = createSelector(
+  getCourse,
+  getAuthors,
+  (course: Course, authors: Author[]) =>
+    course && authors.length ? course.authorIds.map(id => authors.find(a => a.id === id)) : []
+);

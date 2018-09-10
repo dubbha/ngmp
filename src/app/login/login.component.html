@@ -1,16 +1,14 @@
 <div class="app__main_center login">
   <mat-card class="mat-elevation-z">
-    <form (ngSubmit)="onSubmit($event)" #loginForm="ngForm">
+    <form (ngSubmit)="onSubmit($event)" [formGroup]="login">
       <div>
         <mat-form-field>
           <input
             matInput
             placeholder="Please enter email"
-            [(ngModel)]="email"
-            name="email"
+            formControlName="email"
             type="email"
             autocomplete="email"
-            required
           />
         </mat-form-field>
       </div>
@@ -19,18 +17,15 @@
           <input
             matInput
             placeholder="Please enter password"
-            [(ngModel)]="password"
-            name="password"
+            formControlName="password"
             type="password"
             autocomplete="current-password"
-            required
           />
         </mat-form-field>
       </div>
       <button
         mat-raised-button
         color="primary"
-        [disabled]="!loginForm.form.valid"
       >
         <mat-icon>search</mat-icon>
         Login

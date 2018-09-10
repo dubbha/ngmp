@@ -20,7 +20,11 @@ import { MomentDateModule } from '@angular/material-moment-adapter';
 import { ConfirmDialogComponent } from './dialog/confirm-dialog/confirm-dialog.component';
 import { DialogService } from './dialog/dialog.service';
 
-export { MatAutocompleteSelectedEvent, MatChipInputEvent } from '@angular/material';
+export {
+  MatAutocompleteSelectedEvent,
+  MatChipInputEvent,
+  MatChipList,
+} from '@angular/material';
 
 @NgModule({
   imports: [

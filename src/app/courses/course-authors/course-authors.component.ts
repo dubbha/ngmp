@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef, ViewChild, Optional, Host, SkipSelf } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatAutocompleteSelectedEvent, MatChipInputEvent } from '../../material/material.module';
+import { MatAutocompleteSelectedEvent, MatChipInputEvent } from '@angular/material';
 import {
   FormControl,
   ControlValueAccessor,
@@ -16,7 +16,7 @@ import { CoursesState, GetAuthors, getAuthors } from '../store';
 import { map, filter, startWith } from 'rxjs/operators';
 
 import { Author } from '../models';
-import { MatChipList } from '../../material/material.module';
+import { MatChipList } from '@angular/material';
 
 @Component({
   selector: 'app-course-authors',

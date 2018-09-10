@@ -1,7 +1,17 @@
 # Angular Mentoring
 
 ## Task 11. Forms
- - 
+ - Authors added to the application: server, services, store.
+ - ReactiveFormsModule replaced FormsModule across the application
+ - CourseDurationComponent is a custom form control implementing ControlValueAccessor and Validator
+ - CourseDateComponent is a custom form control implementing ControlValueAccessor and Validator
+ - CourseAuthorsComponent is a custom form control implementing ControlValueAccessor and Validator
+ - CourseAuthorsComponent is a Cloud Tags Input: a combination of MatChipList and MatAutocomplete
+ - Build-in Validators used: requried, min, max, pattern
+ - CourseAuthorsComponent requires complex validation mechanics due to nesting and untouched submit support
+ - AddCourseComponent and EditCourseComponent using the custom form controls
+ - LoginComponent is using FormGroup with FormControls
+ - CourseSearchComponent is using FormControl
 
 ## Branches
  - Task1. Webpack/Typescript/Angular Intro

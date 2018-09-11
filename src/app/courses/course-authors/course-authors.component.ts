@@ -55,7 +55,8 @@ export class CourseAuthorsComponent implements OnInit, ControlValueAccessor, Val
       .pipe(
         startWith(null),
         map((prefix: string | null) => prefix
-          ? this.allAuthors.filter(a => a.name.startsWith(prefix))
+          ? this.allAuthors
+            .filter(a => a.name.toUpperCase().startsWith(prefix.toUpperCase()))  // case-insensitive
           : this.allAuthors),
         map(authors => authors.filter(this.isAuthorNotYetSelected))
       )
@@ -72,7 +73,7 @@ export class CourseAuthorsComponent implements OnInit, ControlValueAccessor, Val
     if (value) {
       const foundAuthor = this.allAuthors
         .filter(this.isAuthorNotYetSelected)
-        .find(a => a.name.startsWith(value.trim()));
+        .find(a => a.name.toUpperCase().startsWith(value.trim().toUpperCase()));  // case-insensitive
 
       if (foundAuthor) {
         this.courseAuthors.push(foundAuthor);
